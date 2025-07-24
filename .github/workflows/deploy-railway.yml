@@ -1,0 +1,44 @@
+name: Deploy to Railway
+
+on:
+  workflow_run:
+    workflows: ["Build & Package"]
+    types:
+      - completed
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Railway CLI
+      run: |
+        curl -fsSL https://railway.app/install.sh | sh
+        echo "$HOME/.railway/bin" >> $GITHUB_PATH
+    
+    - name: Deploy Backend to Railway
+      run: |
+        cd backend
+        railway login --token ${{ secrets.RAILWAY_TOKEN }}
+        railway deploy --service backend
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
+    - name: Deploy Frontend to Railway
+      run: |
+        cd frontend
+        railway login --token ${{ secrets.RAILWAY_TOKEN }}
+        railway deploy --service frontend
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
+    - name: Health Check
+      run: |
+        sleep 30
+        curl -f ${{ secrets.RAILWAY_BACKEND_URL }}/api/health || exit 1
+        curl -f ${{ secrets.RAILWAY_FRONTEND_URL }} || exit 1

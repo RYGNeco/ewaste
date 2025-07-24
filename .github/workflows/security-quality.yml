@@ -1,0 +1,50 @@
+name: Security & Quality Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+    
+    - name: Snyk Auth
+      run: snyk auth ${{ secrets.SNYK_TOKEN }}
+      continue-on-error: true
+    
+    - name: Snyk Test - Frontend
+      run: |
+        cd frontend
+        npm ci
+        snyk test --severity-threshold=high
+      continue-on-error: true
+    
+    - name: Snyk Test - Backend
+      run: |
+        cd backend
+        npm ci
+        snyk test --severity-threshold=high
+      continue-on-error: true
+    
+    - name: Run Semgrep
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: >-
+          p/security-audit
+          p/secrets
+          p/owasp-top-ten
+      continue-on-error: true

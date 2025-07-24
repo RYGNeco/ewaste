@@ -1,0 +1,11 @@
+{
+  "name": "rygneco-shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for Rygneco",
+  "main": "index.ts",
+  "types": "index.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}
