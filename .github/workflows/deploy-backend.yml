@@ -1,0 +1,52 @@
+name: Deploy backend to Render
+
+on:
+  workflow_run:
+    workflows: ["Build & Package"]
+    types:
+      - completed
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Trigger Render Deploy Hook
+      run: |
+        curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+    
+    - name: Wait for Deployment
+      run: |
+        echo "Waiting for Render deployment to complete..."
+        sleep 60  # Initial wait for deployment to start
+    
+    - name: Health Check
+      run: |
+        max_attempts=10
+        attempt=1
+        echo "Performing health checks..."
+        
+        # Check basic health endpoint
+        until curl -sf ${{ secrets.RENDER_BACKEND_URL }}/api/health > /dev/null; do
+          if [ $attempt -eq $max_attempts ]; then
+            echo "Basic health check failed after $max_attempts attempts"
+            exit 1
+          fi
+          echo "Health check attempt $attempt failed, waiting 30 seconds..."
+          sleep 30
+          ((attempt++))
+        done
+        echo "Basic health check passed!"
+        
+        # Check API status
+        status_code=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.RENDER_BACKEND_URL }}/api/status)
+        if [ "$status_code" -ne 200 ]; then
+          echo "API status check failed with status code: $status_code"
+          exit 1
+        fi
+        echo "API status check passed!"
