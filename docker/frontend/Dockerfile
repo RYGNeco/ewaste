@@ -30,7 +30,7 @@ COPY frontend/ .
 COPY shared/ ./shared/
 
 # Add export statement to all empty TypeScript files
-RUN find src -type f \( -name "*.ts" -o -name "*.tsx" \) -exec sh -c 'if [ ! -s "$1" ] || ! grep -q "import\|export" "$1"; then echo "export {};" >> "$1"; fi' _ {} \;
+RUN find src -type f \( -name "*.ts" -o -name "*.tsx" \) -exec sh -c 'if [ -s "$1" ] && ! grep -q "import\|export" "$1"; then echo "export {};" > /tmp/tmp_file && cat "$1" >> /tmp/tmp_file && mv /tmp/tmp_file "$1"; elif [ ! -s "$1" ]; then echo "export {};" > "$1"; fi' _ {} \;
 
 # Build for production
 RUN npm run build
