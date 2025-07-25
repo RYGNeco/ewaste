@@ -1,3 +1,6 @@
+// Import Jest types to make this a module
+import { describe, expect, it } from '@jest/globals';
+
 describe('Auth API', () => {
   it('should pass a placeholder test', () => {
     expect(true).toBe(true);
