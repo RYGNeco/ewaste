@@ -45,10 +45,10 @@ COPY shared/ ./
 # Switch back to main app directory
 WORKDIR /app
 
-# Copy backend package files and install all dependencies (including dev dependencies for build)
+# Copy backend package files and install ALL dependencies (including dev dependencies for build)
 COPY backend/package.json ./
 COPY backend/package-lock.json* ./
-RUN npm ci
+RUN npm install
 
 # Copy backend source code
 COPY backend/ .
@@ -57,7 +57,7 @@ COPY backend/ .
 RUN npm run build
 
 # Clean up and install only production dependencies
-RUN rm -rf node_modules && npm ci --only=production && npm cache clean --force
+RUN rm -rf node_modules && npm ci --only=production || npm install --only=production
 
 # Production stage
 FROM node:18-alpine AS production
