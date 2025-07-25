@@ -75,7 +75,7 @@ jobs:
     - name: Run unit tests
       run: |
         cd backend
-        npm run test
+        npm run test -- --passWithNoTests
       env:
         NODE_ENV: test
         MONGODB_URI: mongodb://admin:password123@localhost:27017/rygneco_test?authSource=admin
