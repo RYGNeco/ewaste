@@ -11,7 +11,7 @@ const App: React.FC = () => {
             Rygneco E-Waste Tracker
           </h1>
           <p className="text-gray-600">
-            Professional E-Waste Management & Tracking System
+            Professional E-Waste Management And Tracking System
           </p>
         </header>
 
