@@ -3,10 +3,10 @@ name: Backend Pipeline
 on:
   push:
     branches: [ main, develop ]
-    paths: [ 'backend/**' ]
   pull_request:
     branches: [ main ]
-    paths: [ 'backend/**' ]
+  workflow_dispatch:
+    # Allows manual triggering
 
 jobs:
   backend-tests:
