@@ -25,46 +25,50 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: 'frontend/package-lock.json'
+        cache-dependency-path: '**/package.json'
     
     - name: Install dependencies
       run: |
         cd frontend
-        npm ci
+        npm install
     
-    - name: Create ESLint config
+    # Using .eslintrc.cjs file that's already in the repository
+    - name: Verify ESLint config exists
       run: |
         cd frontend
-        echo 'module.exports = {
-          parser: "@typescript-eslint/parser",
-          extends: [
-            "eslint:recommended",
-            "plugin:@typescript-eslint/recommended",
-            "plugin:react/recommended",
-            "plugin:react-hooks/recommended"
-          ],
-          parserOptions: { 
-            ecmaVersion: 2020, 
-            sourceType: "module",
-            ecmaFeatures: {
-              jsx: true
+        if [ ! -f .eslintrc.cjs ]; then
+          echo "Warning: .eslintrc.cjs not found. Creating a default one."
+          echo 'module.exports = {
+            parser: "@typescript-eslint/parser",
+            extends: [
+              "eslint:recommended",
+              "plugin:@typescript-eslint/recommended",
+              "plugin:react/recommended",
+              "plugin:react-hooks/recommended"
+            ],
+            parserOptions: { 
+              ecmaVersion: 2020, 
+              sourceType: "module",
+              ecmaFeatures: {
+                jsx: true
+              }
+            },
+            env: { 
+              browser: true,
+              es6: true,
+              node: true,
+              jest: true
+            },
+            settings: {
+              react: {
+                version: "detect"
+              }
+            },
+            rules: {
+              "react/react-in-jsx-scope": "off"
             }
-          },
-          env: { 
-            browser: true,
-            es6: true,
-            node: true,
-            jest: true
-          },
-          settings: {
-            react: {
-              version: "detect"
-            }
-          },
-          rules: {
-            "react/react-in-jsx-scope": "off"
-          }
-        };' > .eslintrc.js
+          };' > .eslintrc.cjs
+        fi
     
     - name: Run ESLint
       run: |

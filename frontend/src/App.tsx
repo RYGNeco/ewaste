@@ -1,6 +1,6 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import './styles/App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import "./styles/App.css";
 
 const App: React.FC = () => {
   return (
@@ -14,24 +14,28 @@ const App: React.FC = () => {
             Professional E-Waste Management & Tracking System
           </p>
         </header>
-        
+
         <main>
           <Routes>
-            <Route path="/" element={
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4">Welcome</h2>
-                <p className="text-gray-700">
-                  Your Rygneco E-Waste Tracker is now running successfully!
-                </p>
-                <div className="mt-4 p-4 bg-green-50 rounded border border-green-200">
-                  <p className="text-green-800">
-                    ✅ Frontend: React with TypeScript and Tailwind CSS<br/>
-                    ✅ Backend: Express.js with MongoDB<br/>
-                    ✅ Development servers are ready
+            <Route
+              path="/"
+              element={
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h2 className="text-2xl font-semibold mb-4">Welcome</h2>
+                  <p className="text-gray-700">
+                    Your Rygneco E-Waste Tracker is now running successfully!
                   </p>
+                  <div className="mt-4 p-4 bg-green-50 rounded border border-green-200">
+                    <p className="text-green-800">
+                      ✅ Frontend: React with TypeScript and Tailwind CSS
+                      <br />
+                      ✅ Backend: Express.js with MongoDB
+                      <br />✅ Development servers are ready
+                    </p>
+                  </div>
                 </div>
-              </div>
-            } />
+              }
+            />
           </Routes>
         </main>
       </div>
