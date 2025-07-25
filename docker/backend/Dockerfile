@@ -4,20 +4,26 @@
 FROM node:18-alpine AS development
 WORKDIR /app
 
-# Copy package files
+# Copy and install shared dependencies first
+COPY shared/package.json ./shared/
+COPY shared/package-lock.json* ./shared/
+WORKDIR /app/shared
+RUN npm ci || npm install
+
+# Copy shared source code
+COPY shared/ ./
+
+# Switch back to main app directory
+WORKDIR /app
+
+# Copy backend package files and install dependencies
 COPY backend/package.json ./
 COPY backend/package-lock.json* ./
 RUN npm ci || npm install
 
-# Copy source code
+# Copy backend source code
 COPY backend/ .
-COPY shared/ ./shared/
 
-# Install shared dependencies
-WORKDIR /app/shared
-RUN npm ci || true
-
-WORKDIR /app
 EXPOSE 5000
 
 # Development command
@@ -27,15 +33,31 @@ CMD ["npm", "run", "dev"]
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy and install shared dependencies first
+COPY shared/package.json ./shared/
+COPY shared/package-lock.json* ./shared/
+WORKDIR /app/shared
+RUN npm ci || npm install
+
+# Copy shared source code
+COPY shared/ ./
+
+# Switch back to main app directory
+WORKDIR /app
+
+# Copy backend package files and install all dependencies (including dev dependencies for build)
 COPY backend/package.json ./
 COPY backend/package-lock.json* ./
-RUN npm ci --only=production || npm install --only=production
+RUN npm ci
 
-# Copy source code and build
+# Copy backend source code
 COPY backend/ .
-COPY shared/ ./shared/
+
+# Build the application
 RUN npm run build
+
+# Clean up and install only production dependencies
+RUN rm -rf node_modules && npm ci --only=production && npm cache clean --force
 
 # Production stage
 FROM node:18-alpine AS production
