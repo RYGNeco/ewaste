@@ -29,6 +29,9 @@ RUN npm install
 COPY frontend/ .
 COPY shared/ ./shared/
 
+# Add export statement to all empty TypeScript files
+RUN find src -type f \( -name "*.ts" -o -name "*.tsx" \) -exec sh -c 'if [ ! -s "$1" ] || ! grep -q "import\|export" "$1"; then echo "export {};" >> "$1"; fi' _ {} \;
+
 # Build for production
 RUN npm run build
 
