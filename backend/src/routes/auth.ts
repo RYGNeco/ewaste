@@ -1,6 +1,11 @@
 import express from 'express';
+import { login, protectedRoute } from '../controllers/authController';
+import { isAuthenticated } from '../middleware/auth';
+import { authorizeRoles } from '../middleware/roleCheck';
+
 const router = express.Router();
 
-// Routes will be implemented in the future
+router.post('/login', login);
+router.get('/protected', isAuthenticated, authorizeRoles('admin', 'user'), protectedRoute);
 
 export default router;
