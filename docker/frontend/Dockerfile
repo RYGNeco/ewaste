@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy package files
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY frontend/ .
@@ -23,7 +23,7 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy source code and shared utilities
 COPY frontend/ .
