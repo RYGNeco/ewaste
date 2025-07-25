@@ -18,26 +18,49 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
     
     - name: Install Snyk CLI
       run: npm install -g snyk
+      
+    - name: Install Shared Dependencies
+      run: |
+        cd shared
+        npm install
     
+    # Snyk will work in free mode without authentication
     - name: Snyk Auth
-      run: snyk auth ${{ secrets.SNYK_TOKEN }}
+      env: 
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      run: snyk auth $SNYK_TOKEN || echo "Running Snyk in free mode"
       continue-on-error: true
     
-    - name: Snyk Test - Frontend
+    - name: Frontend Dependencies
       run: |
         cd frontend
-        npm ci
-        snyk test --severity-threshold=high
+        npm install
+        npm ls --json > package-tree.json
+      
+    - name: Snyk Test - Frontend
+      working-directory: ./frontend
+      run: |
+        # Allow Snyk to find node_modules
+        ls -la
+        snyk test --severity-threshold=high --all-projects --detection-depth=6
       continue-on-error: true
     
-    - name: Snyk Test - Backend
+    - name: Backend Dependencies
       run: |
         cd backend
-        npm ci
-        snyk test --severity-threshold=high
+        npm install
+        npm ls --json > package-tree.json
+        
+    - name: Snyk Test - Backend
+      working-directory: ./backend
+      run: |
+        # Allow Snyk to find node_modules
+        ls -la
+        snyk test --severity-threshold=high --all-projects --detection-depth=6
       continue-on-error: true
     
     - name: Run Semgrep
