@@ -53,8 +53,11 @@ RUN npm install
 # Copy backend source code
 COPY backend/ .
 
-# Build the application
-RUN npm run build
+# Debug: Check file structure before building
+RUN ls -la && ls -la src/ || true 
+
+# Build the application with verbose logging
+RUN npm run build --verbose
 
 # Clean up and install only production dependencies
 RUN rm -rf node_modules && npm ci --only=production || npm install --only=production
