@@ -1,19 +1,43 @@
 # Multi-stage Dockerfile for Railway deployment
 # This will build the backend service
 
-FROM node:18-alpine AS base
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Install dependencies for backend
-COPY backend/package*.json ./
-RUN npm ci --only=production
+# Copy and install shared dependencies first
+COPY shared/package.json ./shared/
+COPY shared/package-lock.json* ./shared/
+WORKDIR /app/shared
+RUN npm ci || npm install
+
+# Copy shared source code
+COPY shared/ ./
+
+# Switch back to main app directory
+WORKDIR /app
+
+# Copy backend package files and install ALL dependencies (including dev dependencies for build)
+COPY backend/package.json ./
+COPY backend/package-lock.json* ./
+RUN npm install
 
 # Copy backend source code
 COPY backend/ .
-COPY shared/ ./shared/
 
-# Build the application
-RUN npm run build
+# Build the application using tsconfig.build.json explicitly
+RUN npx tsc -p tsconfig.build.json
+
+# Clean up and install only production dependencies
+RUN rm -rf node_modules && npm install --only=production
+
+# Production stage
+FROM node:18-alpine AS production
+WORKDIR /app
+
+# Copy built application and dependencies
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
 
 # Create uploads directory
 RUN mkdir -p /app/uploads/{proofs,reports,temp}
