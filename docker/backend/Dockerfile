@@ -5,8 +5,9 @@ FROM node:18-alpine AS development
 WORKDIR /app
 
 # Copy package files
-COPY backend/package*.json ./
-RUN npm ci
+COPY backend/package.json ./
+COPY backend/package-lock.json* ./
+RUN npm ci || npm install
 
 # Copy source code
 COPY backend/ .
@@ -27,8 +28,9 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copy package files and install dependencies
-COPY backend/package*.json ./
-RUN npm ci --only=production
+COPY backend/package.json ./
+COPY backend/package-lock.json* ./
+RUN npm ci --only=production || npm install --only=production
 
 # Copy source code and build
 COPY backend/ .
