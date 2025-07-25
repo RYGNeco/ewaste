@@ -57,7 +57,7 @@ COPY backend/ .
 RUN ls -la && ls -la src/ || true 
 
 # Build the application with standard tsconfig.json
-RUN npx tsc -p tsconfig.json
+RUN npx tsc -p tsconfig.build.json
 
 # Clean up and install only production dependencies
 RUN rm -rf node_modules && npm ci --only=production || npm install --only=production
