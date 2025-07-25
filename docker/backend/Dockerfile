@@ -56,8 +56,8 @@ COPY backend/ .
 # Debug: Check file structure before building
 RUN ls -la && ls -la src/ || true 
 
-# Build the application with tsconfig.build.json
-RUN npx tsc -p tsconfig.build.json --verbose
+# Build the application with standard tsconfig.json
+RUN npx tsc -p tsconfig.json
 
 # Clean up and install only production dependencies
 RUN rm -rf node_modules && npm ci --only=production || npm install --only=production

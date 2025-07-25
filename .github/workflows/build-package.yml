@@ -38,6 +38,8 @@ jobs:
           ${{ secrets.DOCKER_USERNAME }}/rygneco-backend:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-args: |
+          SKIP_VERBOSE=true
     
     - name: Build and push frontend image
       uses: docker/build-push-action@v5
