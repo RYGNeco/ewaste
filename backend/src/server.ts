@@ -1,66 +1,93 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
+
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import path from 'path';
+import app from './app';
 
-// Load environment variables
 dotenv.config();
-
-const app = express();
 const PORT = process.env.PORT || 5000;
 
+<<<<<<< HEAD
 // Security middleware
 app.use(helmet());
-app.use(cors());
-
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import app from './app';
 
-// Serve static files for uploads
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+    }
+const PORT = process.env.PORT || 5000;
 
-// Basic health check route
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'Rygneco E-Waste Tracker API is running',
-    timestamp: new Date().toISOString()
-  });
-});
+    const sanitizedURI = mongoURI.includes('@') 
 
-// Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Something went wrong!',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
-});
-
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
-// Database connection
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/rygneco';
+    const mongoURI = process.env.MONGODB_URI;
+    if (!mongoURI) {
+      console.error('❌ MONGODB_URI is not defined in environment variables');
+      process.exit(1);
+    }
+    const sanitizedURI = mongoURI.includes('@') 
+      ? `mongodb://${mongoURI.split('@')[1]}` 
+      : mongoURI.replace(/mongodb(\+srv)?:\/\//, 'mongodb$1://[hidden]');
+    console.log(`🔗 Connecting to MongoDB at ${sanitizedURI}`);
     await mongoose.connect(mongoURI);
     console.log('✅ MongoDB connected successfully');
+    const dbHost = mongoURI.includes('@') 
+      ? mongoURI.split('@')[1].split('/')[0]
+      : 'database';
+    console.log(`🔌 Connected to database: ${dbHost}`);
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
-  }
-};
-
-// Start server
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+      ? `mongodb://${mongoURI.split('@')[1]}` 
+      : mongoURI.replace(/mongodb(\+srv)?:\/\//, 'mongodb$1://[hidden]');
+    console.log(`🔗 Connecting to MongoDB at ${sanitizedURI}`);
 const startServer = async () => {
   try {
     await connectDB();
+    const server = app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? process.env.BASE_URL || `http://localhost:${PORT}`
+        : `http://localhost:${PORT}`;
+      console.log(`🔗 Health check: ${baseUrl}/api/health`);
+      console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log('\n📊 Available API Routes:');
+      console.log('  GET  /api/health - Health check endpoint');
+      if (process.env.NODE_ENV === 'test') {
+        console.log('\n🧪 Running in TEST mode');
+        const dbInfo = process.env.MONGODB_URI?.includes('@')
+          ? process.env.MONGODB_URI?.split('@')[1]?.split('/')[0] 
+          : 'unknown';
+        console.log(`🔧 Using test database: ${dbInfo}`);
+      }
+    });
+    const gracefulShutdown = () => {
+      console.log('🛑 Shutting down gracefully...');
+      server.close(() => {
+        console.log('✅ HTTP server closed');
+        mongoose.connection.close(false, () => {
+          console.log('✅ MongoDB connection closed');
+          process.exit(0);
+        });
+      });
+    };
+    process.on('SIGTERM', gracefulShutdown);
+    process.on('SIGINT', gracefulShutdown);
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+  }
+};
+
+const startServer = async () => {
+  try {
+    await connectDB();
+<<<<<<< HEAD
     
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);
@@ -70,9 +97,43 @@ const startServer = async () => {
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     process.exit(1);
+=======
+    const server = app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? process.env.BASE_URL || `http://localhost:${PORT}`
+        : `http://localhost:${PORT}`;
+      console.log(`🔗 Health check: ${baseUrl}/api/health`);
+      console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log('\n📊 Available API Routes:');
+      console.log('  GET  /api/health - Health check endpoint');
+      if (process.env.NODE_ENV === 'test') {
+        console.log('\n🧪 Running in TEST mode');
+        const dbInfo = process.env.MONGODB_URI?.includes('@')
+          ? process.env.MONGODB_URI?.split('@')[1]?.split('/')[0] 
+          : 'unknown';
+        console.log(`🔧 Using test database: ${dbInfo}`);
+      }
+    });
+    const gracefulShutdown = () => {
+      console.log('🛑 Shutting down gracefully...');
+      server.close(() => {
+        console.log('✅ HTTP server closed');
+        mongoose.connection.close(false, () => {
+          console.log('✅ MongoDB connection closed');
+          process.exit(0);
+        });
+      });
+    };
+    process.on('SIGTERM', gracefulShutdown);
+    process.on('SIGINT', gracefulShutdown);
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+>>>>>>> a96429b (fix: update backend server logic and health check)
   }
 };
 
 startServer();
-
-export default app;
