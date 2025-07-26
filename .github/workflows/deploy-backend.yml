@@ -16,6 +16,26 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    - name: Create build-specific tsconfig
+      run: |
+        cd backend
+        echo '{
+          "extends": "./tsconfig.json",
+          "exclude": [
+            "**/__tests__/**",
+            "**/*.test.ts",
+            "**/*.spec.ts",
+            "node_modules"
+          ],
+          "compilerOptions": {
+            "rootDir": "./src",
+            "outDir": "./dist"
+          }
+        }' > tsconfig.build.json
+        
+        # Update build script in package.json
+        sed -i 's/"build": "tsc"/"build": "tsc -p tsconfig.build.json"/' package.json
+    
     - name: Trigger Render Deploy Hook
       run: |
         curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
