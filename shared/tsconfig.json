@@ -15,10 +15,12 @@
     "noEmit": false,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./"
   },
   "include": [
-    "../src/**/*"
+    "types/**/*",
+    "utils/**/*",
+    "constants/**/*"
   ],
   "exclude": [
     "node_modules",
