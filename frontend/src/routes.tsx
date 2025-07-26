@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import App from "./App";
+import HomePage from "./pages/HomePage";
 
 /**
  * Application routes
@@ -9,7 +9,7 @@ import App from "./App";
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<HomePage />} />
       {/* Additional routes will be added here as components are developed */}
     </Routes>
   );
