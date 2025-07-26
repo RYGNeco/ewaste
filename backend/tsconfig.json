@@ -15,7 +15,8 @@
     "isolatedModules": true,
     "noEmit": false,
     "outDir": "./dist",
-    "rootDir": "./src",
+    // Removing rootDir constraint for development to allow tests
+    // "rootDir": "./src",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true

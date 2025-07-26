@@ -71,3 +71,23 @@ jobs:
           p/secrets
           p/owasp-top-ten
       continue-on-error: true
+
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript, typescript
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
