@@ -1,16 +1,32 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import AdminPage from './pages/AdminPage';
 
-/**
- * Application routes
- * This file will be populated as we implement various pages
- */
+// TODO: Add proper authentication check
+const isAuthenticated = () => {
+  // Implement your authentication check here
+  return true;
+};
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
-      {/* Additional routes will be added here as components are developed */}
+
+      {/* Protected Admin Routes */}
+      <Route path="/admin/*" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+
+      {/* Catch all unmatched routes */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
