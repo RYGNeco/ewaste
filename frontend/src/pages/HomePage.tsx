@@ -8,9 +8,7 @@ import Footer from '../components/Footer';
 const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <Hero />
-
       {/* Services Section */}
       <section id="services" className="py-16 md:py-24 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">

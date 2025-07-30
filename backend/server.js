@@ -21,13 +21,13 @@ function authenticateToken(req, res, next) {
 
 // Login route
 app.post('/api/auth/login', (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   let payload = null;
 
-  if (username === 'admin' && password === 'adminpass') {
-    payload = { id: 1, username: 'admin', role: 'admin' };
-  } else if (username === 'user' && password === 'userpass') {
-    payload = { id: 2, username: 'user', role: 'user' };
+  if (email === 'admin@rygneco.com' && password === 'mynewpass') {
+    payload = { id: 1, email: 'admin@rygneco.com', role: 'admin' };
+  } else if (email === 'user@example.com' && password === 'userpass') {
+    payload = { id: 2, email: 'user@example.com', role: 'user' };
   } else {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -48,6 +48,11 @@ app.get('/api/admin', authenticateToken, (req, res) => {
   } else {
     res.status(403).json({ error: 'Forbidden: Admins only' });
   }
+});
+
+// Catch-all route for undefined endpoints
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
 app.listen(5000, () => {
