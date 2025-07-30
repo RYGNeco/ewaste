@@ -1,6 +1,94 @@
 /* App-specific styles */
 .App {
-  text-align: center;
+  min-height: 100vh;
 }
 
 /* Custom component styles will go here */
+
+body {
+  font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Smooth transitions for sections */
+section {
+  transition: box-shadow 0.3s, background 0.3s;
+}
+
+/* Custom scrollbar for modern look */
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e0f2f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #38a169;
+  border-radius: 8px;
+}
+
+/* Mobile-first design */
+.container {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Aspect ratio for images */
+.aspect-w-1 {
+  position: relative;
+  padding-bottom: 100%;
+  height: 0;
+}
+
+.aspect-w-1 img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.25rem;
+  }
+  .container,
+  .max-w-4xl,
+  .max-w-5xl,
+  .max-w-xl {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles/App.css";
 
@@ -32,56 +32,36 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">Rygneco E-Waste Tracker</h1>
-          <p className="text-gray-600">Professional E-Waste Management And Tracking System</p>
+          <h1 className="text-4xl font-bold text-green-600 mb-2">
+            Rygneco E-Waste Tracker
+          </h1>
+          <p className="text-gray-600">
+            Professional E-Waste Management And Tracking System
+          </p>
         </header>
+
         <main>
-          <form onSubmit={handleLogin} className="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">Login</h2>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-700 mb-2">Username</label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700 mb-2">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded"
-              />
-            </div>
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Login</button>
-            {error && <p className="mt-4 text-red-600">{error}</p>}
-            {token && (
-              <>
-                <div className="mt-4 p-4 bg-green-50 rounded border border-green-200">
-                  <p className="text-green-800">Welcome, {username}!<br />JWT: {token}</p>
-                </div>
-                <button
-                  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-                  type="button"
-                  onClick={() => setShowProtected(true)}
-                >
-                  Protected Page
-                </button>
-                {showProtected && (
-                  <div className="mt-4 p-4 bg-blue-50 rounded border border-blue-200">
-                    <p className="text-blue-800">Protected Content</p>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h2 className="text-2xl font-semibold mb-4">Welcome</h2>
+                  <p className="text-gray-700">
+                    Your Rygneco E-Waste Tracker is now running successfully!
+                  </p>
+                  <div className="mt-4 p-4 bg-green-50 rounded border border-green-200">
+                    <p className="text-green-800">
+                      ✅ Frontend: React with TypeScript and Tailwind CSS
+                      <br />
+                      ✅ Backend: Express.js with MongoDB
+                      <br />✅ Development servers are ready
+                    </p>
                   </div>
-                )}
-              </>
-            )}
-          </form>
+                </div>
+              }
+            />
+          </Routes>
         </main>
       </div>
     </div>

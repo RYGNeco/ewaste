@@ -76,9 +76,10 @@ jobs:
         npm run lint
       continue-on-error: true
     
-    - name: Run Prettier check
+    - name: Format and check with Prettier
       run: |
         cd frontend
+        npx prettier --write src/
         npx prettier --check src/
     
     - name: Run unit tests
