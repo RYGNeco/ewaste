@@ -75,7 +75,10 @@ const App: React.FC = () => {
             {token && (
               <>
                 <div className="mt-4 p-4 bg-green-50 rounded border border-green-200">
-                  <p className="text-green-800">Welcome, {username}!<br />JWT: {token}</p>
+                  <p className="text-green-800">Welcome, {username}!<br />JWT:</p>
+                  <pre className="text-xs break-words whitespace-pre-wrap bg-green-100 p-2 rounded border border-green-300">
+                    {token.match(/.{1,40}/g)?.join('\n')}
+                  </pre>
                 </div>
                 <button
                   className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
