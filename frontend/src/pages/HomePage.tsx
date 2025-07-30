@@ -1,273 +1,174 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import CeoInfo from '../components/CeoInfo';
-import Contact from '../components/Contact';
-import Footer from '../components/Footer';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  FaRecycle,
+  FaBuilding,
+  FaShieldAlt,
+  FaCertificate,
+  FaChartBar,
+  FaWeight,
+  FaTools,
+  FaLeaf,
+  FaCalendarCheck,
+  FaTruck,
+  FaLock,
+  FaSyncAlt,
+  FaRegSmileBeam,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn
+} from 'react-icons/fa';
+import './HomePage.css';
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
+  useEffect(() => {
+    const handleScroll = () => {
+      document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 60) {
+          el.classList.add('visible');
+        }
+      });
+    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Hero />
-      {/* Services Section */}
-      <section id="services" className="py-16 md:py-24 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-green-700 mb-12">
-            Our E-Waste Management Services
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Service Card 1 */}
-            <div className="bg-gray-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-green-100 p-3 inline-flex rounded-full mb-4">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">E-Waste Collection</h3>
-              <p className="text-gray-600 mb-4">
-                We offer convenient collection services for businesses and individuals. Our team
-                ensures safe handling and transportation of your electronic waste.
-              </p>
-              <a
-                href="#contact"
-                className="text-green-600 font-medium hover:underline inline-flex items-center"
-              >
-                Learn More
-                <svg
-                  className="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            </div>
+    <div className="homepage eco-bg">
+      {/* Hero Section */}
+      <section className="hero" style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+        <div className="hero-image animate-fade-in-left" style={{flex: '1 1 300px', display: 'flex', justifyContent: 'center'}}>
+          <img src="https://images.squarespace-cdn.com/content/v1/6063fb56ece40577795aaa5f/20fe33a3-8425-41fd-b8cf-2811651ca473/iStock-1372577388.jpg" alt="Eco-friendly electronics recycling illustration" style={{maxWidth: '350px', width: '100%', borderRadius: '1rem'}} />
+        </div>
+        <div className="hero-content animate-fade-in-up" style={{flex: '2 1 400px', maxWidth: '600px', textAlign: 'center', padding: '0 2rem'}}>
+          <h1>Responsible E-Waste Recycling for a Cleaner Tomorrow!</h1>
+          <p className="subheadline">
+            At RYGNeco, we make it easy for businesses and individuals to safely and responsibly recycle their electronic waste. From outdated computers to broken printers and everything in between — we help reduce landfill waste, recover valuable materials, and protect the environment.
+          </p>
+          <div className="cta-buttons">
+            <Link to="/login" className="btn btn-green">Login</Link>
+            <Link to="/register" className="btn btn-outline-green">Register</Link>
+          </div>
+        </div>
+        <div className="hero-image animate-fade-in-right" style={{flex: '1 1 300px', display: 'flex', justifyContent: 'center'}}>
+          <img src="/illustrative-diagram-electrical-waste-recycling-process-step-223221443.jpg" alt="E-waste recycling process diagram" style={{maxWidth: '350px', width: '100%', borderRadius: '1rem'}} />
+        </div>
+      </section>
 
-            {/* Service Card 2 */}
-            <div className="bg-gray-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-green-100 p-3 inline-flex rounded-full mb-4">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Secure Data Destruction</h3>
-              <p className="text-gray-600 mb-4">
-                Protect your sensitive information with our certified data destruction services. We
-                ensure complete erasure of all data from your devices.
-              </p>
-              <a
-                href="#contact"
-                className="text-green-600 font-medium hover:underline inline-flex items-center"
-              >
-                Learn More
-                <svg
-                  className="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            </div>
-
-            {/* Service Card 3 */}
-            <div className="bg-gray-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-              <div className="bg-green-100 p-3 inline-flex rounded-full mb-4">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">IT Asset Disposal</h3>
-              <p className="text-gray-600 mb-4">
-                Comprehensive IT asset management and environmentally responsible disposal. We
-                handle the entire lifecycle from collection to recycling.
-              </p>
-              <a
-                href="#contact"
-                className="text-green-600 font-medium hover:underline inline-flex items-center"
-              >
-                Learn More
-                <svg
-                  className="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            </div>
+      {/* What We Offer Section */}
+      <section className="offer animate-on-scroll">
+        <h2>What We Offer</h2>
+        <p className="offer-sub">Whether you're a small office or a large corporation, we provide reliable, secure, and eco-conscious solutions for disposing of your electronic waste.</p>
+        <div className="offer-cards">
+          <div className="offer-card">
+            <FaBuilding className="offer-icon" />
+            <h3>Business Pick-Up Services</h3>
+            <p>Scheduled or on-demand e-waste collection from your business location.</p>
+          </div>
+          <div className="offer-card">
+            <FaShieldAlt className="offer-icon" />
+            <h3>Secure Data Destruction</h3>
+            <p>Certified wiping or shredding with documentation for your records.</p>
+          </div>
+          <div className="offer-card">
+            <FaRecycle className="offer-icon" />
+            <h3>Certified Recycling</h3>
+            <p>Environmentally responsible processing that meets all regulations.</p>
+          </div>
+          <div className="offer-card">
+            <FaCertificate className="offer-icon" />
+            <h3>Compliance Documentation</h3>
+            <p>Clear, itemized reports and certificates for audits and tracking.</p>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section
-        id="about"
-        className="py-16 md:py-24 px-4"
-        style={{ background: 'linear-gradient(to bottom, #ecfdf5, #ffffff)' }}
-      >
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-8 md:mb-0 md:pr-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-green-700 mb-6">
-                About Rygneco E-Waste Tracker
-              </h2>
-              <div className="space-y-4 text-gray-700">
-                <p>
-                  Rygneco is dedicated to revolutionizing e-waste management through innovative
-                  tracking and recycling solutions. Founded in 2020, we've been at the forefront of
-                  sustainable electronic disposal practices.
-                </p>
-                <p>
-                  Our mission is to reduce the environmental impact of electronic waste while
-                  recovering valuable resources. Through our transparent tracking system, clients
-                  can monitor their e-waste journey from collection to recycling, ensuring
-                  compliance and environmental responsibility.
-                </p>
-                <p>
-                  With state-of-the-art facilities and expert teams, we handle all types of
-                  electronic waste, from personal devices to large corporate IT assets, providing
-                  tailored solutions for businesses and individuals alike.
-                </p>
-              </div>
-              <div className="mt-6 flex space-x-4">
-                <div className="flex items-center">
-                  <div className="bg-green-100 p-2 rounded-full mr-2">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Certified Recycling</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="bg-green-100 p-2 rounded-full mr-2">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Secure Data Handling</span>
-                </div>
-              </div>
-            </div>
-            <div className="md:w-1/2">
-              <div className="relative">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="aspect-w-1 aspect-h-1">
-                    <img
-                      src="/placeholder.svg"
-                      alt="E-Waste Collection"
-                      className="object-cover rounded-lg shadow-md"
-                    />
-                  </div>
-                  <div className="aspect-w-1 aspect-h-1 mt-8">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Recycling Process"
-                      className="object-cover rounded-lg shadow-md"
-                    />
-                  </div>
-                  <div className="aspect-w-1 aspect-h-1 -mt-4">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Resource Recovery"
-                      className="object-cover rounded-lg shadow-md"
-                    />
-                  </div>
-                  <div className="aspect-w-1 aspect-h-1 mt-4">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Sustainable Practices"
-                      className="object-cover rounded-lg shadow-md"
-                    />
-                  </div>
-                </div>
-                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-green-200 rounded-full opacity-60 -z-10"></div>
-                <div className="absolute -top-6 -left-6 w-24 h-24 bg-green-300 rounded-full opacity-70 -z-10"></div>
-              </div>
-            </div>
+      {/* First Year Goals Section */}
+      <section className="goals animate-on-scroll">
+        <h2>RYGNeco's First Year Goals</h2>
+        <div className="goal-stats">
+          <div className="goal-card">
+            <FaLeaf className="goal-icon" />
+            <span className="goal-title">E-Waste Partners</span>
+            <span className="goal-value">50+</span>
+          </div>
+          <div className="goal-card">
+            <FaChartBar className="goal-icon" />
+            <span className="goal-title">Devices Collected</span>
+            <span className="goal-value">10,000+</span>
+          </div>
+          <div className="goal-card">
+            <FaWeight className="goal-icon" />
+            <span className="goal-title">Total Weight (kg)</span>
+            <span className="goal-value">25,000</span>
+          </div>
+          <div className="goal-card">
+            <FaTools className="goal-icon" />
+            <span className="goal-title">Devices Refurbished</span>
+            <span className="goal-value">2,000+</span>
+          </div>
+          <div className="goal-card">
+            <FaRecycle className="goal-icon" />
+            <span className="goal-title">Devices Recycled</span>
+            <span className="goal-value">8,000+</span>
           </div>
         </div>
       </section>
 
-      <CeoInfo />
-      <Contact />
-      <Footer />
+      {/* Our Process Section */}
+      <section className="process animate-on-scroll">
+        <h2>Our Process</h2>
+        <div className="process-steps">
+          <div className="process-step">
+            <FaCalendarCheck className="process-icon" />
+            <span>Schedule</span>
+            <p>Easy online form to schedule pickup.</p>
+          </div>
+          <div className="process-step">
+            <FaTruck className="process-icon" />
+            <span>Collect</span>
+            <p>Our team collects your devices on time.</p>
+          </div>
+          <div className="process-step">
+            <FaLock className="process-icon" />
+            <span>Secure</span>
+            <p>Data is securely wiped or destroyed.</p>
+          </div>
+          <div className="process-step">
+            <FaSyncAlt className="process-icon" />
+            <span>Process</span>
+            <p>Devices are refurbished, repurposed, or recycled.</p>
+          </div>
+          <div className="process-step">
+            <FaRegSmileBeam className="process-icon" />
+            <span>Impact</span>
+            <p>Receive detailed environmental and data security reports.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-links">
+          <Link to="/about">About</Link>
+          <Link to="/services">Services</Link>
+          <Link to="/faqs">FAQs</Link>
+          <Link to="/contact">Contact Us</Link>
+        </div>
+        <div className="footer-social">
+          <a href="#" aria-label="Facebook"><FaFacebookF /></a>
+          <a href="#" aria-label="Twitter"><FaTwitter /></a>
+          <a href="#" aria-label="Instagram"><FaInstagram /></a>
+          <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
+        </div>
+        <div className="footer-info">
+          <span>© {new Date().getFullYear()} RYGNeco. All rights reserved.</span>
+          <span className="footer-tagline">Empowering responsible e-waste recycling for a cleaner, greener future.</span>
+        </div>
+      </footer>
     </div>
   );
 };
