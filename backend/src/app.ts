@@ -48,6 +48,19 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+
+// Protected route example
+import { isAuthenticated } from './middleware/auth';
+import { authorizeRoles } from './middleware/roleCheck';
+app.get('/api/protected', isAuthenticated, (req, res) => {
+  res.json({ message: 'This is a protected route', user: req.user });
+});
+
+// Admin-only route example
+app.get('/api/admin', isAuthenticated, authorizeRoles('admin'), (req, res) => {
+  res.json({ message: 'Welcome, admin!', user: req.user });
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
