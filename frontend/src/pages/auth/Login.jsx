@@ -12,7 +12,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/
       setError('Logout failed');
     }
   };
-import '../firebase';
+import '../../firebase';
 
 const Login = () => {
   const [isAdminLogin, setIsAdminLogin] = useState(false);
