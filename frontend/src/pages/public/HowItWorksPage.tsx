@@ -4,7 +4,7 @@ import {
   FaCalendarCheck, FaTruck, FaLock, FaSyncAlt, FaRegSmileBeam,
   FaDesktop, FaTabletAlt, FaMobileAlt, FaTv, FaNetworkWired, FaKeyboard, FaPlug, FaMicrophone, FaSearch, FaChevronDown, FaChevronUp, FaCertificate, FaChartBar, FaFileAlt, FaWeight, FaLeaf, FaClipboardList
 } from 'react-icons/fa';
-import './HowItWorksPage.css';
+import '../styles/HowItWorksPage.css';
 
 const deviceCategories = [
   {

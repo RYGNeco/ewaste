@@ -1,16 +1,20 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import ContactPage from './pages/ContactPage';
-import AboutUsPage from './pages/AboutUsPage';
-import EducationPage from './pages/EducationPage';
-import HowItWorksPage from './pages/HowItWorksPage';
-import JoinUsPage from './pages/JoinUsPage';
-import AdminPage from './pages/AdminPage';
 import { Suspense } from 'react';
-const Login = React.lazy(() => import('./pages/Login'));
-const Register = React.lazy(() => import('./pages/Register'));
-const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
+
+// Import pages from the new organized structure
+import HomePage from './pages/public/HomePage';
+import ContactPage from './pages/public/ContactPage';
+import AboutUsPage from './pages/public/AboutUsPage';
+import EducationPage from './pages/public/EducationPage';
+import HowItWorksPage from './pages/public/HowItWorksPage';
+import JoinUsPage from './pages/public/JoinUsPage';
+import AdminPage from './pages/admin/AdminPage';
+
+// Lazy load authentication pages
+const Login = React.lazy(() => import('./pages/auth/Login.jsx'));
+const Register = React.lazy(() => import('./pages/auth/Register.jsx'));
+const ForgotPassword = React.lazy(() => import('./pages/auth/ForgotPassword.jsx'));
 
 // TODO: Add proper authentication check
 const isAuthenticated = () => {

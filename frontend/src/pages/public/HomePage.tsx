@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Footer from '../components/Footer';
+import Footer from '../../components/Footer';
 import {
   FaRecycle,
   FaBuilding,
@@ -20,7 +20,7 @@ import {
   FaInstagram,
   FaLinkedinIn
 } from 'react-icons/fa';
-import './HomePage.css';
+import '../styles/HomePage.css';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 const HomePage = () => {

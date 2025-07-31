@@ -1,51 +1,9 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import path from 'path';
+import app from './app';
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
-
-// Security middleware
-app.use(helmet());
-app.use(cors());
-
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Serve static files for uploads
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
-// Basic health check route
-app.get('/api/health', (req, res) => {
-  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-  
-  res.json({ 
-    status: 'OK', 
-    message: 'Rygneco E-Waste Tracker API is running',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    database: {
-      status: dbStatus,
-      name: mongoose.connection.name || 'unknown'
-    },
-    version: process.env.npm_package_version || '1.0.0'
-  });
-});
-
-// Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Something went wrong!',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
-});
-
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
 
 // Set strictQuery option to suppress deprecation warning
 mongoose.set('strictQuery', false);
@@ -91,8 +49,7 @@ const startServer = async () => {
         : `http://localhost:${PORT}`;
       console.log(`🔗 Health check: ${baseUrl}/api/health`);
       console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log('\n📊 Available API Routes:');
-      console.log('  GET  /api/health - Health check endpoint');
+      
       if (process.env.NODE_ENV === 'test') {
         console.log('\n🧪 Running in TEST mode');
         const dbInfo = process.env.MONGODB_URI?.includes('@')
@@ -101,6 +58,8 @@ const startServer = async () => {
         console.log(`🔧 Using test database: ${dbInfo}`);
       }
     });
+    
+    // Handle graceful shutdown
     const gracefulShutdown = () => {
       console.log('🛑 Shutting down gracefully...');
       server.close(() => {
@@ -118,8 +77,10 @@ const startServer = async () => {
     if (process.env.NODE_ENV !== 'production') {
       process.exit(1);
     }
->>>>>>> a96429b (fix: update backend server logic and health check)
   }
 };
 
+// Initialize the server
 startServer();
+
+export default app; // For testing purposes

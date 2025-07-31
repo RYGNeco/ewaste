@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Footer from '../components/Footer';
+import Footer from '../../components/Footer';
 import { FaRecycle, FaTools, FaChartBar, FaRegSmileBeam, FaLeaf, FaBuilding, FaCertificate, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaUserCircle, FaCheckCircle, FaBookOpen, FaSyncAlt, FaLock, FaHammer, FaUsers } from 'react-icons/fa';
-import './HomePage.css';
+import '../styles/HomePage.css';
 
 const AboutUs = () => {
   return (

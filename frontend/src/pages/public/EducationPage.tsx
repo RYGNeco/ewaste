@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   FaMobileAlt, FaExclamationTriangle, FaRecycle, FaArrowRight, FaArrowLeft, FaArrowUp, FaArrowDown, FaInfoCircle, FaGlobe, FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn
 } from 'react-icons/fa';
-import './EducationPage.css';
+import '../styles/EducationPage.css';
 
 const funFacts = [
   {

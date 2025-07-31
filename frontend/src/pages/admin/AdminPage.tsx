@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import AdminLayout from '../components/layout/AdminLayout';
-import Dashboard from '../components/admin/Dashboard';
-import BatchManagement from '../components/admin/BatchManagement';
-import EmployeeManagement from '../components/admin/EmployeeManagement';
-import InventoryManagement from '../components/admin/InventoryManagement';
-import PartnerManagement from '../components/admin/PartnerManagement';
-import Settings from '../components/admin/Settings';
+import AdminLayout from '../../components/layout/AdminLayout';
+import Dashboard from '../../components/admin/Dashboard';
+import BatchManagement from '../../components/admin/BatchManagement';
+import EmployeeManagement from '../../components/admin/EmployeeManagement';
+import InventoryManagement from '../../components/admin/InventoryManagement';
+import PartnerManagement from '../../components/admin/PartnerManagement';
+import Settings from '../../components/admin/Settings';
 
 const AdminPage: React.FC = () => {
   const location = useLocation();

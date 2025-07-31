@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaRecycle, FaLeaf, FaUsers, FaChartBar, FaTruck, FaMobileAlt, FaBuilding, FaGift, FaHandshake, FaBullhorn, FaMedal, FaMoneyBillWave, FaTree } from 'react-icons/fa';
-import './JoinUsPage.css';
+import '../styles/JoinUsPage.css';
 
 const JoinUsPage = () => (
   <div className="joinus-page eco-bg">
