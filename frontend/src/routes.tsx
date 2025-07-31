@@ -1,6 +1,11 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import ContactPage from './pages/ContactPage';
+import AboutUsPage from './pages/AboutUsPage';
+import EducationPage from './pages/EducationPage';
+import HowItWorksPage from './pages/HowItWorksPage';
+import JoinUsPage from './pages/JoinUsPage';
 import AdminPage from './pages/AdminPage';
 import { Suspense } from 'react';
 const Login = React.lazy(() => import('./pages/Login'));
@@ -29,7 +34,12 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
+        <Route path="/education" element={<EducationPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/join-us" element={<JoinUsPage />} />
+        <Route path="/about-us" element={<AboutUsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         {/* Protected Admin Routes */}
         <Route path="/admin/*" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
