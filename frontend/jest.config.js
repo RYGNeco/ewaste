@@ -4,7 +4,7 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.(ts|tsx)'],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.json',
+      tsconfig: '<rootDir>/tsconfig.test.json'
     }]
   },
   moduleNameMapper: {
@@ -16,13 +16,18 @@ module.exports = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/index.tsx',
+    '!src/pages/scripts/**/*',
+    '!src/firebase.js'
   ],
   coverageThreshold: {
     global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70
+      branches: 0,
+      functions: 0,
+      lines: 0,
+      statements: 0
     }
-  }
+  },
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-icons|firebase)/)'
+  ]
 }

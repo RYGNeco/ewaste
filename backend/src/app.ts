@@ -7,7 +7,7 @@ import passport from 'passport';
 import mongoose from 'mongoose';
 
 // Load passport configuration
-import '../config/passport';
+import './config/passport';
 
 // Routes
 import authRoutes from './routes/auth';

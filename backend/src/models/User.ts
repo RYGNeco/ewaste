@@ -1,12 +1,17 @@
-export interface User {
-  id: string;
-  username: string;
-  password: string;
-  role: string;
+import mongoose, { Document, Schema } from 'mongoose';
+
+export interface IUser extends Document {
+  googleId: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
 }
 
-// Example in-memory users (replace with DB in production)
-export const users: User[] = [
-  { id: '1', username: 'admin', password: 'adminpass', role: 'admin' },
-  { id: '2', username: 'user', password: 'userpass', role: 'user' },
-];
+const userSchema = new Schema<IUser>({
+  googleId: { type: String, required: true, unique: true },
+  name: String,
+  email: { type: String, required: true, unique: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' }
+});
+
+export default mongoose.model<IUser>('User', userSchema);

@@ -13,7 +13,7 @@ beforeAll(() => {
     else if (input instanceof Request && typeof input.url === 'string') url = input.url;
     if (url.includes('/api/auth/login')) {
       const body = init && init.body ? JSON.parse(init.body as string) : {};
-      if (body.username === 'admin' && body.password === 'adminpass') {
+      if (body.email === 'admin@test.com' && body.password === 'adminpass') {
         return Promise.resolve({
           ok: true,
           status: 200,
@@ -45,34 +45,43 @@ afterAll(() => {
 describe('Authentication Flow', () => {
   it('shows error on invalid login', async () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/login']}>
         <App />
       </MemoryRouter>
     );
-    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'wrong' } });
+    
+    // Wait for the login form to be rendered
+    await waitFor(() => {
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    });
+    
+    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'wrong@test.com' } });
     fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'wrongpass' } });
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }));
+    
     await waitFor(() => {
       expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
     });
   });
 
-  it('logs in and accesses protected route', async () => {
+  it('logs in successfully with valid credentials', async () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={['/login']}>
         <App />
       </MemoryRouter>
     );
-    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'admin' } });
-    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'adminpass' } });
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    
+    // Wait for the login form to be rendered
     await waitFor(() => {
-      expect(screen.getByText(/welcome/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     });
-    // Simulate navigation to protected route
-    fireEvent.click(screen.getByText(/protected page/i));
+    
+    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'admin@test.com' } });
+    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'adminpass' } });
+    fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }));
+    
     await waitFor(() => {
-      expect(screen.getByText(/protected content/i)).toBeInTheDocument();
+      expect(screen.getByText(/rygneco/i)).toBeInTheDocument();
     });
   });
 });

@@ -12,9 +12,9 @@ import JoinUsPage from './pages/public/JoinUsPage';
 import AdminPage from './pages/admin/AdminPage';
 
 // Lazy load authentication pages
-const Login = React.lazy(() => import('./pages/auth/Login.jsx'));
-const Register = React.lazy(() => import('./pages/auth/Register.jsx'));
-const ForgotPassword = React.lazy(() => import('./pages/auth/ForgotPassword.jsx'));
+const Login = React.lazy(() => import('./pages/auth/Login'));
+const Register = React.lazy(() => import('./pages/auth/Register'));
+const ForgotPassword = React.lazy(() => import('./pages/auth/ForgotPassword'));
 
 // TODO: Add proper authentication check
 const isAuthenticated = () => {

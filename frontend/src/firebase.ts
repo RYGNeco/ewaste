@@ -1,4 +1,4 @@
-// frontend/src/firebase.js
+// frontend/src/firebase.ts
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
@@ -10,4 +10,4 @@ const firebaseConfig = {
   appId: "1:761945196987:android:41ab8a0de7228b88f45c9e"
 };
 
-initializeApp(firebaseConfig);
+initializeApp(firebaseConfig); 
