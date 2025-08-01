@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import EcoNavbar from '../../components/EcoNavbar';
 import {
   FaCalendarCheck, FaTruck, FaLock, FaSyncAlt, FaRegSmileBeam,
   FaDesktop, FaTabletAlt, FaMobileAlt, FaTv, FaNetworkWired, FaKeyboard, FaPlug, FaMicrophone, FaSearch, FaChevronDown, FaChevronUp, FaCertificate, FaChartBar, FaFileAlt, FaWeight, FaLeaf, FaClipboardList
@@ -113,6 +114,7 @@ const HowItWorksPage = () => {
 
   return (
     <div className="howitworks-page eco-bg">
+      <EcoNavbar />
       {/* Hero Section */}
       <section className="howitworks-hero" aria-label="E-waste recycling illustration">
         <img src="/illustrative-diagram-electrical-waste-recycling-process-step-223221443.jpg" alt="Illustration of e-waste recycling process" style={{ width: '100%', maxHeight: '350px', objectFit: 'cover', borderRadius: '1rem' }} />

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import EcoNavbar from '../../components/EcoNavbar';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaLinkedinIn, FaTwitter } from 'react-icons/fa';
 import '../styles/ContactPage.css';
 
@@ -36,6 +37,7 @@ const ContactPage = () => {
 
   return (
     <div className="contact-bg">
+      <EcoNavbar />
       <div className="contact-header">
         <h1>Get in Touch</h1>
         <p className="contact-subtitle">Certified e-waste recycling for businesses and organizations</p>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import EcoNavbar from '../../components/EcoNavbar';
 import {
   FaMobileAlt, FaExclamationTriangle, FaRecycle, FaArrowRight, FaArrowLeft, FaArrowUp, FaArrowDown, FaInfoCircle, FaGlobe, FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn
 } from 'react-icons/fa';
@@ -49,6 +50,7 @@ const EducationPage = () => {
 
   return (
     <div className="education-page eco-bg">
+      <EcoNavbar />
       {/* Hero Section */}
       <section className="education-hero">
         {/* Removed hero image for cleaner look */}
