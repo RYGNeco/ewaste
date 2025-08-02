@@ -84,9 +84,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm h-16 flex items-center px-4 py-15  mb-4">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm h-16 flex items-center px-4 py-15 mb-4">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none"
@@ -168,7 +168,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
 
       {/* Main Content */}
       <div
-        className={`transition-all duration-300 ease-in-out min-h-screen
+        className={`flex-1 transition-all duration-300 ease-in-out min-h-screen
         ${isMobile 
           ? 'ml-0 pt-16' 
           : `${isNavCollapsed ? 'ml-20' : 'ml-64'}`

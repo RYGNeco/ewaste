@@ -1,23 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer';
 import { FaRecycle, FaTools, FaChartBar, FaRegSmileBeam, FaLeaf, FaBuilding, FaCertificate, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaUserCircle, FaCheckCircle, FaBookOpen, FaSyncAlt, FaLock, FaHammer, FaUsers } from 'react-icons/fa';
-import '../styles/HomePage.css';
+import '../../styles/AboutUs.css';
 
 const AboutUs = () => {
+  // Add scroll animation functionality
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.15
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach(el => observer.observe(el));
+
+    // Clean up the observer when component unmounts
+    return () => elements.forEach(el => observer.unobserve(el));
+  }, []);
+
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="aboutus eco-bg">
       {/* Hero Section */}
-      <section className="hero" style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap'}}>
-        <div className="hero-image animate-fade-in-left" style={{flex: '1 1 300px', display: 'flex', justifyContent: 'center'}}>
-          <img src="/hero-eco-recycle.svg" alt="Eco-friendly electronics recycling illustration" style={{maxWidth: '350px', width: '100%', borderRadius: '1rem'}} />
+      <section className="hero">
+        <div className="hero-image animate-fade-in-left">
+          <img src="/hero-eco-recycle.svg" alt="Eco-friendly electronics recycling illustration" />
         </div>
-        <div className="hero-content animate-fade-in-up" style={{flex: '2 1 400px', maxWidth: '600px', textAlign: 'center', padding: '0 2rem'}}>
+        <div className="hero-content animate-fade-in-up">
           <h1>About Us</h1>
           <p className="subheadline">Meet the team behind RYGNeco and discover our mission to transform e-waste into opportunity.</p>
         </div>
-        <div className="hero-image animate-fade-in-right" style={{flex: '1 1 300px', display: 'flex', justifyContent: 'center'}}>
-          <img src="/illustrative-diagram-electrical-waste-recycling-process-step-223221443.jpg" alt="E-waste recycling process diagram" style={{maxWidth: '350px', width: '100%', borderRadius: '1rem'}} />
+        <div className="hero-image animate-fade-in-right">
+          <img src="/illustrative-diagram-electrical-waste-recycling-process-step-223221443.jpg" alt="E-waste recycling process diagram" />
         </div>
       </section>
 
@@ -26,14 +55,14 @@ const AboutUs = () => {
         <h2>Meet the Team</h2>
         <div className="team-cards">
           <div className="team-card">
-            <img src="/leila-meyer-headshot.jpg" alt="Leila Meyer Headshot" className="team-headshot" style={{width: '120px', borderRadius: '50%'}} />
+            <img src="/leila-meyer-headshot.jpg" alt="Leila Meyer Headshot" className="team-headshot" />
             <h3>Leila Meyer</h3>
             <span className="team-title">Chief Executive Officer</span>
             <p>Leila Meyer is a passionate entrepreneur committed to tackling the global e-waste crisis through innovative, community-driven solutions. With a multidisciplinary background in Architecture, Construction, Education, Interior Design, and Marketing, Leila brings a unique and holistic perspective to sustainability and circular design.</p>
             <p>She earned her Bachelor of Science in Architecture from the University of Cincinnati, where she developed a deep understanding of design thinking and environmental responsibility. Her diverse experience across industries informs her leadership at RYGNeco, guiding a new vision for managing electronic waste—transforming discarded tech into opportunity and building a more sustainable future.</p>
           </div>
           <div className="team-card">
-            <img src="/sama-mushtaq-headshot.jpg" alt="Sama Mushtaq Headshot" className="team-headshot" style={{width: '120px', borderRadius: '50%'}} />
+            <img src="/sama-mushtaq-headshot.jpg" alt="Sama Mushtaq Headshot" className="team-headshot" />
             <h3>Sama Mushtaq</h3>
             <span className="team-title">Chief Sustainability Officer</span>
             <p>Bio placeholder: Insert Sama’s background, passions, and role in driving sustainability at RYGNeco.</p>
@@ -87,10 +116,10 @@ const AboutUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="cta animate-on-scroll" style={{textAlign: 'center', margin: '3rem 0'}}>
+      <section className="cta animate-on-scroll">
         <h2>Ready to Make a Difference?</h2>
         <p>Join us in building a cleaner, more equitable tech future.</p>
-        <div className="cta-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '2rem' }}>
+        <div className="cta-buttons">
           <Link to="/get-involved" className="btn btn-green">Get Involved</Link>
           <Link to="/partner" className="btn btn-outline-green">Partner With Us</Link>
           <Link to="/recycle" className="btn btn-green">Recycle Now</Link>
