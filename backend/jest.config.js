@@ -13,8 +13,5 @@ module.exports = {
   },
   detectOpenHandles: true,
   testTimeout: 15000,
-  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js'],
-  moduleNameMapping: {
-    '^@/(.*)$': '<rootDir>/src/$1'
-  }
+  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js']
 };
