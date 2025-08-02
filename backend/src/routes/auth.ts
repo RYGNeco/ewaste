@@ -1,13 +1,36 @@
 import express from 'express';
-import { oauthCallback, logout, protectedRoute, login } from '../controllers/authController';
-import { isAuthenticated } from '../middleware/auth';
-import { authorizeRoles } from '../middleware/roleCheck';
+import passport from 'passport';
+import {
+  oauthCallback,
+  completeProfile,
+  getCurrentUser,
+  logout,
+  login
+} from '../controllers/authController';
+import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
 
-router.post('/login', login);
-router.get('/google/callback', oauthCallback);
+// Google OAuth routes
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
+}));
+
+router.get('/google/callback', 
+  passport.authenticate('google', { session: false }),
+  oauthCallback
+);
+
+// Profile completion after Google OAuth
+router.post('/complete-profile', completeProfile);
+
+// Get current user info
+router.get('/me', authenticateToken, getCurrentUser);
+
+// Logout
 router.post('/logout', logout);
-router.get('/protected', isAuthenticated, authorizeRoles('admin', 'user'), protectedRoute);
+
+// Legacy login (for non-Google auth)
+router.post('/login', login);
 
 export default router;

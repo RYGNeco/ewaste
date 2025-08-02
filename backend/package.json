@@ -10,7 +10,8 @@
     "test": "jest --passWithNoTests --forceExit --detectOpenHandles",
     "test:watch": "jest --watch",
     "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix"
+    "lint:fix": "eslint src --ext .ts --fix",
+    "setup-super-admin": "node scripts/setupSuperAdmin.js"
   },
   "dependencies": {
     "@types/cors": "^2.8.13",

@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/public/HomePage';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import CompleteProfile from './pages/auth/CompleteProfile';
+import PendingApproval from './pages/auth/PendingApproval';
 import AdminPage from './pages/admin/AdminPage';
 import PartnerDashboard from './pages/partner/PartnerDashboard';
 import AboutUsPage from './pages/public/AboutUsPage';
@@ -25,9 +27,12 @@ const AppRoutes: React.FC = () => {
       {/* Auth Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/complete-profile" element={<CompleteProfile />} />
+      <Route path="/pending-approval" element={<PendingApproval />} />
       
       {/* Protected Routes */}
       <Route path="/admin/*" element={<AdminPage />} />
+      <Route path="/partner-dashboard" element={<PartnerDashboard />} />
       <Route path="/dashboard" element={<PartnerDashboard />} />
       
       {/* Fallback */}
