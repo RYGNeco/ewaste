@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense } from 'react';
+import { getAuth } from 'firebase/auth';
 
 // Import pages from the new organized structure
 import HomePage from './pages/public/HomePage';
@@ -16,11 +17,25 @@ const Login = React.lazy(() => import('./pages/auth/Login'));
 const Register = React.lazy(() => import('./pages/auth/Register'));
 const ForgotPassword = React.lazy(() => import('./pages/auth/ForgotPassword'));
 
-// TODO: Add proper authentication check
 const isAuthenticated = () => {
-  // Check for JWT token in localStorage
+  // Check for token in localStorage
   const token = localStorage.getItem('token');
-  return !!token;
+  
+  if (!token) {
+    // Also check Firebase auth state as backup
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      // If we have Firebase user but no token, get and store the token
+      user.getIdToken().then(idToken => {
+        localStorage.setItem('token', idToken);
+      });
+      return true;
+    }
+    return false;
+  }
+  
+  return true;
 };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -31,6 +46,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const AppRoutes: React.FC = () => {
+  // Lazy load user dashboard
+  const UserDashboard = React.lazy(() => import('./pages/user/UserDashboard'));
+
   return (
     <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
       <Routes>
@@ -45,7 +63,11 @@ export const AppRoutes: React.FC = () => {
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
 
+        {/* Protected User Dashboard Route */}
+        <Route path="/user/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+
         {/* Protected Admin Routes */}
+        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
         <Route path="/admin/*" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
 
         {/* Catch all unmatched routes */}
