@@ -9,3 +9,9 @@ export function signToken(payload: object) {
 export function verifyToken(token: string) {
   return jwt.verify(token, JWT_SECRET);
 }
+
+// Export as an object with both methods for compatibility
+export const jwtUtils = {
+  sign: signToken,
+  verify: verifyToken
+};

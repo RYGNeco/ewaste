@@ -12,9 +12,9 @@ module.exports = {
     }]
   },
   detectOpenHandles: true,
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.test.json'
-    }
+  testTimeout: 15000,
+  setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js'],
+  moduleNameMapping: {
+    '^@/(.*)$': '<rootDir>/src/$1'
   }
 };

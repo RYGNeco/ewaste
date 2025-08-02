@@ -16,6 +16,7 @@ import partnerRoutes from './routes/partners';
 import batchRoutes from './routes/batches';
 import analyticsRoutes from './routes/analytics';
 import uploadRoutes from './routes/uploads';
+import roleRequestRoutes from './routes/roleRequests';
 
 // Middleware
 import { errorHandler } from './middleware/errorHandler';
@@ -49,6 +50,7 @@ app.use('/api/partners', partnerRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/role-requests', roleRequestRoutes);
 
 // CORS preflight requests
 app.options('*', cors());

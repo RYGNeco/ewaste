@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { signToken } from '../config/jwt';
+import { signToken, verifyToken } from '../config/jwt';
 import User, { IUser } from '../models/User';
 import Partner, { IPartner } from '../models/Partner';
 import RoleRequest, { IRoleRequest } from '../models/RoleRequest';
@@ -86,7 +86,7 @@ export const completeProfile = async (req: Request, res: Response) => {
     }
 
     // Decode token to get user info
-    const decoded = signToken.verify(tempToken);
+    const decoded = verifyToken(tempToken) as any;
     
     if (userType === 'employee') {
       // Create employee user
@@ -224,6 +224,11 @@ export function protectedRoute(req: Request, res: Response) {
 // Legacy login (for non-Google auth)
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  
+  // Validate required fields
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
   
   try {
     const user = await User.findOne({ email });
