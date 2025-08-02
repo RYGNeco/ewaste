@@ -229,30 +229,6 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Newsletter Signup - Optional */}
-      <div className="bg-gray-800 py-8">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Stay Updated with RYGNeco
-            </h3>
-            <p className="text-gray-300 mb-4">
-              Get the latest news on e-waste recycling and sustainability.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
-              />
-              <button className="btn btn-primary">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </footer>
   );
 };
