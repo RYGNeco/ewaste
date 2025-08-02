@@ -1,232 +1,255 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  FaRecycle, 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope, 
+  FaClock,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaArrowUp,
+  FaLeaf,
+  FaShieldAlt,
+  FaUsers,
+  FaChartLine
+} from 'react-icons/fa';
 
 const Footer: React.FC = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const currentYear = new Date().getFullYear();
+
+  const footerLinks = {
+    company: [
+      { label: 'About Us', href: '/about-us' },
+      { label: 'Our Mission', href: '/about-us#our-mission' },
+      { label: 'Meet The Team', href: '/about-us#meet-the-team' },
+      { label: 'Careers', href: '/careers' },
+      { label: 'Press Kit', href: '/press' }
+    ],
+    services: [
+      { label: 'Corporate Pickup', href: '/services#corporate' },
+      { label: 'Data Security', href: '/services#security' },
+      { label: 'Asset Recovery', href: '/services#recovery' },
+      { label: 'Compliance', href: '/services#compliance' },
+      { label: 'Reporting', href: '/services#reporting' }
+    ],
+    resources: [
+      { label: 'How It Works', href: '/how-it-works' },
+      { label: 'Education Center', href: '/education' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Case Studies', href: '/case-studies' },
+      { label: 'FAQ', href: '/faq' }
+    ],
+    support: [
+      { label: 'Contact Us', href: '/contact' },
+      { label: 'Help Center', href: '/help' },
+      { label: 'Live Chat', href: '/chat' },
+      { label: 'Status Page', href: '/status' },
+      { label: 'Support Ticket', href: '/support' }
+    ]
+  };
+
+  const socialLinks = [
+    { icon: FaFacebook, href: 'https://facebook.com/rygneco', label: 'Facebook' },
+    { icon: FaTwitter, href: 'https://twitter.com/rygneco', label: 'Twitter' },
+    { icon: FaInstagram, href: 'https://instagram.com/rygneco', label: 'Instagram' },
+    { icon: FaLinkedin, href: 'https://linkedin.com/company/rygneco', label: 'LinkedIn' },
+    { icon: FaYoutube, href: 'https://youtube.com/rygneco', label: 'YouTube' }
+  ];
+
+
+
   return (
-    <footer className="bg-gray-900 text-white py-10">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-xl font-semibold mb-4 text-green-400">Rygneco</h3>
-            <p className="text-gray-300 text-sm mb-4">
-              Professional E-Waste Management and Tracking System. Reducing environmental impact one
-              device at a time.
+    <footer className="bg-gray-900 text-white">
+      {/* Main Footer Content */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+          {/* Company Info */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-6">
+              <FaRecycle className="text-3xl text-green-400" />
+              <span className="text-2xl font-bold">RYGNeco</span>
+            </div>
+            <p className="text-gray-300 mb-6 leading-relaxed">
+              Leading e-waste recycling solutions that protect the environment, 
+              secure your data, and maximize value recovery for your business.
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="https://facebook.com/rygneco"
-                aria-label="Facebook"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+            
+            {/* Contact Info */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-3 text-gray-300">
+                <FaMapMarkerAlt className="text-green-400 flex-shrink-0" />
+                <span>123 Green Street, Eco City, EC 12345</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-300">
+                <FaPhone className="text-green-400 flex-shrink-0" />
+                <span>+1 (555) 123-4567</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-300">
+                <FaEnvelope className="text-green-400 flex-shrink-0" />
+                <span>hello@rygneco.com</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-300">
+                <FaClock className="text-green-400 flex-shrink-0" />
+                <span>Mon-Fri: 8AM-6PM EST</span>
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex gap-3">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-300 hover:bg-green-600 hover:text-white transition-colors"
+                  aria-label={social.label}
                 >
-                  <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12z" />
-                </svg>
-              </a>
-              <a
-                href="https://twitter.com/rygneco"
-                aria-label="Twitter"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                </svg>
-              </a>
-              <a
-                href="https://instagram.com/rygneco"
-                aria-label="Instagram"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M12.315 2c1.532 0 1.938.006 2.652.038 1.695.077 2.737.356 3.723.753a7.544 7.544 0 012.729 1.78 7.52 7.52 0 011.779 2.73c.398.986.677 2.027.753 3.723.033.715.039 1.121.039 2.652s-.006 1.939-.039 2.654c-.076 1.695-.355 2.736-.753 3.723a7.544 7.544 0 01-1.78 2.728 7.544 7.544 0 01-2.728 1.78c-.988.398-2.028.677-3.723.753-.715.033-1.121.039-2.654.039-1.533 0-1.939-.006-2.654-.039-1.696-.076-2.736-.355-3.724-.753a7.544 7.544 0 01-2.728-1.78 7.52 7.52 0 01-1.78-2.727c-.397-.988-.677-2.028-.753-3.724C3.006 14.253 3 13.848 3 12.316s.006-1.939.039-2.654c.076-1.696.355-2.736.753-3.724a7.52 7.52 0 011.78-2.728 7.52 7.52 0 012.728-1.78c.988-.397 2.028-.677 3.723-.753C10.377 2.006 10.782 2 12.315 2zm0 2.314c-1.35 0-1.764.006-2.452.036-1.252.057-1.95.254-2.448.464-.664.26-1.08.533-1.565 1.018-.485.485-.758.901-1.018 1.565-.21.498-.407 1.196-.464 2.448-.03.688-.035 1.102-.035 2.451 0 1.35.005 1.765.035 2.453.057 1.252.254 1.95.464 2.448.26.664.533 1.08 1.018 1.565.485.485.901.758 1.565 1.018.498.21 1.196.407 2.448.464.688.03 1.102.035 2.452.035 1.35 0 1.764-.006 2.452-.035 1.252-.057 1.95-.254 2.448-.464.664-.26 1.08-.533 1.565-1.018.485-.485.758-.901 1.018-1.565.21-.498.407-1.196.464-2.448.03-.688.035-1.103.035-2.452s-.005-1.764-.035-2.452c-.057-1.252-.254-1.95-.464-2.448-.26-.664-.533-1.08-1.018-1.565-.485-.485-.901-.758-1.565-1.018-.498-.21-1.196-.407-2.448-.464-.688-.03-1.102-.036-2.452-.036zm0 3.936a4.066 4.066 0 110 8.131 4.066 4.066 0 010-8.131zm0 6.703a2.637 2.637 0 100-5.274 2.637 2.637 0 000 5.274zm4.227-7.839a.95.95 0 100 1.9.95.95 0 000-1.9z"
-                  />
-                </svg>
-              </a>
-              <a
-                href="https://linkedin.com/company/rygneco"
-                aria-label="LinkedIn"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                </svg>
-              </a>
+                  <social.icon className="text-lg" />
+                </a>
+              ))}
             </div>
           </div>
 
+          {/* Company Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-green-400">Services</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
-                  E-Waste Collection
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
-                  Secure Data Destruction
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
-                  IT Asset Disposal
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
-                  Electronics Recycling
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
-                  Corporate Programs
-                </a>
-              </li>
+            <h3 className="text-lg font-semibold mb-4 text-white">Company</h3>
+            <ul className="space-y-2">
+              {footerLinks.company.map((link, index) => (
+                <li key={index}>
+                  <Link 
+                    to={link.href}
+                    className="text-gray-300 hover:text-green-400 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Services Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-green-400">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#about" className="text-gray-300 hover:text-white transition-colors">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
-                  Our Process
-                </a>
-              </li>
-              <li>
-                <a href="/blog" className="text-gray-300 hover:text-white transition-colors">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="/faq" className="text-gray-300 hover:text-white transition-colors">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="/careers" className="text-gray-300 hover:text-white transition-colors">
-                  Careers
-                </a>
-              </li>
+            <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
+            <ul className="space-y-2">
+              {footerLinks.services.map((link, index) => (
+                <li key={index}>
+                  <Link 
+                    to={link.href}
+                    className="text-gray-300 hover:text-green-400 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Resources Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-green-400">Contact</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start">
-                <svg
-                  className="w-5 h-5 text-green-400 mr-2 mt-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <span className="text-gray-300">
-                  123 Eco Street, Green Valley
-                  <br />
-                  California, 90210
-                </span>
-              </li>
-              <li className="flex items-start">
-                <svg
-                  className="w-5 h-5 text-green-400 mr-2 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                <a
-                  href="mailto:info@rygneco.com"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  info@rygneco.com
-                </a>
-              </li>
-              <li className="flex items-start">
-                <svg
-                  className="w-5 h-5 text-green-400 mr-2 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                <a
-                  href="tel:+18001234567"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  +1 (800) 123-4567
-                </a>
-              </li>
+            <h3 className="text-lg font-semibold mb-4 text-white">Resources</h3>
+            <ul className="space-y-2">
+              {footerLinks.resources.map((link, index) => (
+                <li key={index}>
+                  <Link 
+                    to={link.href}
+                    className="text-gray-300 hover:text-green-400 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support Links */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-white">Support</h3>
+            <ul className="space-y-2">
+              {footerLinks.support.map((link, index) => (
+                <li key={index}>
+                  <Link 
+                    to={link.href}
+                    className="text-gray-300 hover:text-green-400 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
+      </div>
 
-        <div className="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© {new Date().getFullYear()} Rygneco. All rights reserved.</p>
-          <div className="mt-4 md:mt-0 space-x-6">
-            <a href="/privacy" className="hover:text-white transition-colors">
-              Privacy Policy
-            </a>
-            <a href="/terms" className="hover:text-white transition-colors">
-              Terms of Service
-            </a>
-            <a href="/cookies" className="hover:text-white transition-colors">
-              Cookie Policy
-            </a>
+      
+
+      {/* Bottom Footer */}
+      <div className="border-t border-gray-800 py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            {/* Copyright */}
+            <div className="text-gray-300 text-sm">
+              © {currentYear} RYGNeco. All rights reserved. | 
+              <Link to="/privacy" className="hover:text-green-400 transition-colors ml-1">
+                Privacy Policy
+              </Link> | 
+              <Link to="/terms" className="hover:text-green-400 transition-colors ml-1">
+                Terms of Service
+              </Link>
+            </div>
+
+            {/* Certifications */}
+            <div className="flex items-center gap-4 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <FaLeaf className="text-green-400" />
+                <span>ISO 14001 Certified</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FaShieldAlt className="text-green-400" />
+                <span>R2 Certified</span>
+              </div>
+            </div>
+
+            {/* Back to Top */}
+            <button
+              onClick={scrollToTop}
+              className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center text-white hover:bg-green-700 transition-colors"
+              aria-label="Back to top"
+            >
+              <FaArrowUp />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Newsletter Signup - Optional */}
+      <div className="bg-gray-800 py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Stay Updated with RYGNeco
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Get the latest news on e-waste recycling and sustainability.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+              />
+              <button className="btn btn-primary">
+                Subscribe
+              </button>
+            </div>
           </div>
         </div>
       </div>

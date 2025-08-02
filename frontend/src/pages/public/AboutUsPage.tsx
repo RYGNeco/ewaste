@@ -1,12 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import EcoNavbar from "../../components/EcoNavbar";
 import { FaBoxOpen, FaWrench, FaChartBar, FaBrain, FaTruck, FaRecycle, FaCheckCircle, FaSeedling, FaHandshake, FaLightbulb, FaShieldAlt, FaBalanceScale } from "react-icons/fa";
 import "../styles/AboutUsPage.css";
 
 const AboutUsPage = () => (
   <div className="aboutus-page eco-bg">
-    <EcoNavbar />
     {/* Hero Section */}
     <section className="aboutus-hero">
       <img src="/assets/about-hero-bg.jpg" alt="E-waste sustainability banner" className="aboutus-hero-img" />
