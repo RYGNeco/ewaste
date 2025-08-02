@@ -40,10 +40,15 @@ const Login: React.FC = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
+      // Get the ID token
+      const idToken = await result.user.getIdToken();
+      // Store it in localStorage
+      localStorage.setItem('token', idToken);
       setError('');
-      navigate('/dashboard');
+      navigate('/user/dashboard');
     } catch (err) {
       setError('Google sign-in failed');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -67,7 +72,7 @@ const Login: React.FC = () => {
         if (isAdminLogin) {
           navigate('/admin');
         } else {
-          navigate('/dashboard');
+          navigate('/user/dashboard');
         }
       } else {
         setError(data.error || 'Invalid credentials');
