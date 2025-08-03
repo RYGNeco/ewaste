@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import EcoNavbar from '../../components/EcoNavbar';
 import {
   FaMobileAlt, FaExclamationTriangle, FaRecycle, FaArrowRight, FaArrowLeft, FaArrowUp, FaArrowDown, FaInfoCircle, FaGlobe, FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn
 } from 'react-icons/fa';
-import '../styles/EducationPage.css';
 
 const funFacts = [
   {
@@ -49,105 +47,204 @@ const EducationPage = () => {
   };
 
   return (
-    <div className="education-page eco-bg">
-      <EcoNavbar />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+      
       {/* Hero Section */}
-      <section className="education-hero">
-        {/* Removed hero image for cleaner look */}
+      <section className="py-16 px-4 bg-gradient-to-br from-green-100 to-blue-100">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">Education Center</h1>
+          <p className="text-xl text-gray-600">
+            Learn about e-waste, circular economy, and how you can make a difference
+          </p>
+        </div>
       </section>
 
       {/* What Is E-Waste */}
-      <section id="what-is-ewaste" className="education-ewaste">
-        <h2>What Is E-Waste?</h2>
-        <div className="education-ewaste-content">
-          <FaMobileAlt className="education-icon" />
-          <p>Electronic waste (e-waste) refers to discarded electrical or electronic devices, including everything from outdated smartphones and laptops to broken household appliances and industrial equipment.<br />E-waste often contains valuable materials like gold, copper, and rare earth elements, alongside hazardous substances such as lead, mercury, and cadmium.</p>
-          <FaExclamationTriangle className="education-icon warning" />
+      <section id="what-is-ewaste" className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">What Is E-Waste?</h2>
+          <div className="bg-green-50 p-8 rounded-lg border border-green-200">
+            <div className="flex items-center justify-center mb-6">
+              <FaMobileAlt className="text-6xl text-green-600" />
+            </div>
+            <p className="text-lg text-gray-700 leading-relaxed text-center">
+              Electronic waste (e-waste) refers to discarded electrical or electronic devices, including everything from outdated smartphones and laptops to broken household appliances and industrial equipment.
+              <br /><br />
+              E-waste often contains valuable materials like gold, copper, and rare earth elements, alongside hazardous substances such as lead, mercury, and cadmium.
+            </p>
+            <div className="flex items-center justify-center mt-6">
+              <FaExclamationTriangle className="text-4xl text-yellow-600" />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Why Does E-Waste Matter */}
-      <section className="education-matter">
-        <h2>Why Does E-Waste Matter?</h2>
-        <p>E-waste is the fastest-growing waste stream in the world, driven by rapid technological advancement and short product life cycles. Every discarded phone, laptop, or appliance contributes to a growing environmental challenge — and an untapped economic opportunity.<br />Improper disposal of e-waste can release toxic substances into soil, water, and air, endangering human health and ecosystems. Yet, e-waste also contains valuable materials like gold, copper, and rare earth metals that can be recovered and reused.<br />Recycling e-waste responsibly reduces pollution, conserves natural resources, and supports a circular economy where technology is reused, repaired, and repurposed — not wasted.</p>
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">Why Does E-Waste Matter?</h2>
+          <div className="bg-white p-8 rounded-lg border border-gray-200">
+            <p className="text-lg text-gray-700 leading-relaxed">
+              E-waste is the fastest-growing waste stream in the world, driven by rapid technological advancement and short product life cycles. Every discarded phone, laptop, or appliance contributes to a growing environmental challenge — and an untapped economic opportunity.
+              <br /><br />
+              Improper disposal of e-waste can release toxic substances into soil, water, and air, endangering human health and ecosystems. Yet, e-waste also contains valuable materials like gold, copper, and rare earth metals that can be recovered and reused.
+              <br /><br />
+              Recycling e-waste responsibly reduces pollution, conserves natural resources, and supports a circular economy where technology is reused, repaired, and repurposed — not wasted.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Circular Economy */}
-      <section id="circular-economy" className="education-circular">
-        <h2>What Is A Circular Economy?</h2>
-        <div className="education-circular-diagram">
-          <span>Use</span> <FaArrowRight /> <span>Reuse</span> <FaArrowRight /> <span>Repair</span> <FaArrowRight /> <span>Recycle</span> <FaArrowRight /> <span>Back to Use</span>
+      <section id="circular-economy" className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">What Is A Circular Economy?</h2>
+          <div className="bg-blue-50 p-8 rounded-lg border border-blue-200">
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-6 text-lg font-semibold text-gray-700">
+              <span className="bg-white px-4 py-2 rounded-lg shadow">Use</span>
+              <FaArrowRight className="text-blue-600" />
+              <span className="bg-white px-4 py-2 rounded-lg shadow">Reuse</span>
+              <FaArrowRight className="text-blue-600" />
+              <span className="bg-white px-4 py-2 rounded-lg shadow">Repair</span>
+              <FaArrowRight className="text-blue-600" />
+              <span className="bg-white px-4 py-2 rounded-lg shadow">Recycle</span>
+              <FaArrowRight className="text-blue-600" />
+              <span className="bg-white px-4 py-2 rounded-lg shadow">Back to Use</span>
+            </div>
+            <p className="text-lg text-gray-700 leading-relaxed text-center">
+              A circular economy keeps resources in use longer—repairing, reusing, and recycling instead of throwing away.
+              <br /><br />
+              This model reduces pollution, conserves raw materials, and gives new life to old tech.
+            </p>
+          </div>
         </div>
-        <p>A circular economy keeps resources in use longer—repairing, reusing, and recycling instead of throwing away.<br />This model reduces pollution, conserves raw materials, and gives new life to old tech.</p>
       </section>
 
       {/* Fun Facts */}
-      <section id="fun-facts" className="education-funfacts">
-        <h2>Fun Facts</h2>
-        <div className="education-funfacts-cards">
-          {funFacts.map((fact, idx) => (
-            <div key={idx} className="education-funfact-card">
-              {fact.icon}
-              <span>{fact.fact}</span>
-            </div>
-          ))}
+      <section id="fun-facts" className="py-16 px-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">Fun Facts</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {funFacts.map((fact, idx) => (
+              <div key={idx} className="bg-white p-6 rounded-lg border border-gray-200 text-center shadow-md">
+                <div className="text-4xl text-green-600 mb-4">{fact.icon}</div>
+                <span className="text-gray-700 font-medium">{fact.fact}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Community Learning In Action */}
-      <section id="community-learning" className="education-community">
-        <h2>Community Learning In Action</h2>
-        <p>We work with schools, community centers, and local partners to host hands-on learning events.<br />Have an idea or want to collaborate?</p>
-        <div className="education-contact-block">
-          <div><FaPhone /> <span>+1 (616)-RYGNECO</span></div>
-          <div><FaEnvelope /> <span>info@rygneco.com</span></div>
-          <div><FaMapMarkerAlt /> <span>123 Green St, Eco City, USA</span></div>
-          <div className="education-social">
-            <a href="#" aria-label="Facebook"><FaFacebookF /></a>
-            <a href="#" aria-label="Twitter"><FaTwitter /></a>
-            <a href="#" aria-label="Instagram"><FaInstagram /></a>
-            <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
+      <section id="community-learning" className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">Community Learning In Action</h2>
+          <div className="bg-green-50 p-8 rounded-lg border border-green-200">
+            <p className="text-lg text-gray-700 mb-8 text-center">
+              We work with schools, community centers, and local partners to host hands-on learning events.
+              <br /><br />
+              Have an idea or want to collaborate?
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="flex items-center gap-3 text-gray-700">
+                <FaPhone className="text-green-600 text-xl" />
+                <span>+1 (616)-RYGNECO</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <FaEnvelope className="text-green-600 text-xl" />
+                <span>info@rygneco.com</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-700">
+                <FaMapMarkerAlt className="text-green-600 text-xl" />
+                <span>123 Green St, Eco City, USA</span>
+              </div>
+            </div>
+            <div className="flex justify-center gap-6">
+              <a href="#" aria-label="Facebook" className="text-blue-600 hover:text-blue-800 text-2xl">
+                <FaFacebookF />
+              </a>
+              <a href="#" aria-label="Twitter" className="text-blue-600 hover:text-blue-800 text-2xl">
+                <FaTwitter />
+              </a>
+              <a href="#" aria-label="Instagram" className="text-blue-600 hover:text-blue-800 text-2xl">
+                <FaInstagram />
+              </a>
+              <a href="#" aria-label="LinkedIn" className="text-blue-600 hover:text-blue-800 text-2xl">
+                <FaLinkedinIn />
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* User Input Form */}
-      <section className="education-form">
-        <h2>Let’s Collaborate!</h2>
-        <form onSubmit={handleSubmit} className="education-collab-form">
-          <div>
-            <label>Full Name*<br /><input type="text" name="name" value={form.name} onChange={handleChange} required /></label>
-          </div>
-          <div>
-            <label>Company Name<br /><input type="text" name="company" value={form.company} onChange={handleChange} /></label>
-          </div>
-          <div>
-            <label>Email*<br /><input type="email" name="email" value={form.email} onChange={handleChange} required /></label>
-          </div>
-          <div>
-            <label>Phone Number<br /><input type="tel" name="phone" value={form.phone} onChange={handleChange} /></label>
-          </div>
-          {error && <div className="education-form-error">{error}</div>}
-          <button type="submit" className="btn btn-green">Submit Request</button>
-          {submitted && <div className="education-form-success">Thank you! We’ll be in touch soon.</div>}
-        </form>
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">Let's Collaborate!</h2>
+          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg border border-gray-200 shadow-md">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Full Name*
+                </label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  value={form.name} 
+                  onChange={handleChange} 
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Company Name
+                </label>
+                <input 
+                  type="text" 
+                  name="company" 
+                  value={form.company} 
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Email*
+                </label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  value={form.email} 
+                  onChange={handleChange} 
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Phone Number
+                </label>
+                <input 
+                  type="tel" 
+                  name="phone" 
+                  value={form.phone} 
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+            {error && <div className="text-red-600 mb-4 p-3 bg-red-50 rounded-lg">{error}</div>}
+            <button 
+              type="submit" 
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              Submit Request
+            </button>
+            {submitted && <div className="text-green-600 mt-4 p-3 bg-green-50 rounded-lg text-center">Thank you! We'll be in touch soon.</div>}
+          </form>
+        </div>
       </section>
-
-      {/* Footer */}
-      <footer className="footer">
-        <div className="footer-links">
-          <Link to="#community-learning">Community Learning In Action</Link>
-          <Link to="#what-is-ewaste">Learn more about E-Waste</Link>
-          <Link to="/about">About</Link>
-          <Link to="/services">Services</Link>
-          <Link to="/faqs">FAQs</Link>
-          <Link to="/contact">Contact Us</Link>
-        </div>
-        <div className="footer-info">
-          <span>© {new Date().getFullYear()} RYGNeco. All rights reserved.</span>
-          <span className="footer-tagline">Empowering responsible e-waste recycling for a cleaner, greener future.</span>
-        </div>
-      </footer>
     </div>
   );
 };

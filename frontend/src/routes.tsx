@@ -12,6 +12,7 @@ import ContactPage from './pages/public/ContactPage';
 import HowItWorksPage from './pages/public/HowItWorksPage';
 import EducationPage from './pages/public/EducationPage';
 import JoinUsPage from './pages/public/JoinUsPage';
+import ServicesPage from './pages/public/ServicesPage';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/about-us" element={<AboutUsPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/services" element={<ServicesPage />} />
       <Route path="/how-it-works" element={<HowItWorksPage />} />
       <Route path="/education" element={<EducationPage />} />
       <Route path="/join-us" element={<JoinUsPage />} />

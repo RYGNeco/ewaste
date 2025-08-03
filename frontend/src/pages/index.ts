@@ -12,5 +12,4 @@ export { default as AboutUsPage } from './public/AboutUsPage';
 export { default as ContactPage } from './public/ContactPage';
 export { default as EducationPage } from './public/EducationPage';
 export { default as HowItWorksPage } from './public/HowItWorksPage';
-export { default as JoinUsPage } from './public/JoinUsPage';
-export { default as AboutUs } from './public/AboutUs'; 
+export { default as JoinUsPage } from './public/JoinUsPage'; 

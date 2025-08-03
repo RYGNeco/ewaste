@@ -5,7 +5,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["jest", "node", "@testing-library/jest-dom", "@jest/globals"]
   },
   "include": [
     "src",

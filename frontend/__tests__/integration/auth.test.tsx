@@ -2,30 +2,34 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
+import { fn, mock, type MockFetch, type MockResponse } from '../test-utils';
 
 // Mock Firebase Auth - Define mocks first
-const mockSignInWithPopup = jest.fn();
-const mockOnAuthStateChanged = jest.fn();
-const mockSignOut = jest.fn();
+const mockSignInWithPopup = fn();
+const mockOnAuthStateChanged = fn<(callback: (user: any | null) => void) => void>();
+const mockSignOut = fn();
 
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(() => ({
+mock('firebase/auth', () => ({
+  getAuth: fn(() => ({
     onAuthStateChanged: mockOnAuthStateChanged,
     signOut: mockSignOut
   })),
   signInWithPopup: mockSignInWithPopup,
-  GoogleAuthProvider: jest.fn(() => ({
-    addScope: jest.fn(),
-    setCustomParameters: jest.fn()
+  GoogleAuthProvider: fn(() => ({
+    addScope: fn(),
+    setCustomParameters: fn()
   }))
 }));
 
 // Mock react-router-dom
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useLocation: () => ({ pathname: '/login' })
-}));
+mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom') as Record<string, unknown>;
+  return {
+    ...actual,
+    useNavigate: () => fn(),
+    useLocation: () => ({ pathname: '/login' })
+  };
+});
 
 // Mock components to avoid CSS imports
 jest.mock('../../src/components/Navbar', () => {
@@ -53,7 +57,7 @@ Object.defineProperty(window, 'localStorage', {
 
 // Mock fetch for API calls
 beforeAll(() => {
-  global.fetch = jest.fn((input: string | URL | Request, init?: RequestInit) => {
+  const mockFetch = fn<typeof fetch>((input: string | URL | Request, init?: RequestInit) => {
     let url = '';
     if (typeof input === 'string') url = input;
     else if (input instanceof URL) url = input.toString();
@@ -69,20 +73,22 @@ beforeAll(() => {
             token: 'mock-jwt-token',
             user: { email: 'admin@test.com', role: 'admin' }
           })
-        } as unknown as Response);
+        } as Response);
       }
       return Promise.resolve({
         ok: false,
         status: 401,
         json: () => Promise.resolve({ error: 'Invalid credentials' })
-      } as unknown as Response);
+      } as Response);
     }
     return Promise.resolve({
       ok: false,
       status: 404,
       json: () => Promise.resolve({ error: 'Not found' })
-    } as unknown as Response);
-  }) as typeof fetch;
+    } as Response);
+  });
+
+  (global as any).fetch = mockFetch;
 });
 
 beforeEach(() => {
@@ -91,16 +97,15 @@ beforeEach(() => {
   localStorageMock.getItem.mockReturnValue(null);
   mockOnAuthStateChanged.mockImplementation((callback) => {
     callback(null); // No user initially
-    return jest.fn(); // Return unsubscribe function
+    return fn(); // Return unsubscribe function
   });
 });
 
 afterAll(() => {
-  if (global.fetch && 'mockClear' in global.fetch) {
-    // @ts-ignore
-    global.fetch.mockClear();
+  if (global.fetch && typeof global.fetch === 'function' && 'mockClear' in global.fetch) {
+    ((global.fetch as unknown) as MockFetch).mockClear();
   }
-  global.fetch = jest.fn();
+  (global as any).fetch = fn<typeof fetch>();
 });
 
 describe('Authentication Flow', () => {

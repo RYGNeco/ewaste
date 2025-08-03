@@ -5,29 +5,29 @@ import { FaArrowRight, FaTruck, FaShieldAlt, FaDollarSign, FaRecycle } from 'rea
 const ServicesDropdown: React.FC = () => {
   const serviceItems = [
     {
-      title: 'Corporate Pickup',
-      href: '/services/corporate-pickup',
+      title: 'E-Waste Collection',
+      href: '/services#collection',
       icon: FaTruck,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50'
     },
     {
-      title: 'Data Destruction',
-      href: '/services/data-destruction',
+      title: 'Device Refurbishment',
+      href: '/services#refurbishment',
       icon: FaShieldAlt,
       color: 'text-green-600',
       bgColor: 'bg-green-50'
     },
     {
-      title: 'Asset Recovery',
-      href: '/services/asset-recovery',
+      title: 'Data Analytics',
+      href: '/services#analytics',
       icon: FaDollarSign,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50'
     },
     {
-      title: 'Recycling Process',
-      href: '/services/recycling-process',
+      title: 'Corporate Solutions',
+      href: '/services#corporate',
       icon: FaRecycle,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50'

@@ -12,10 +12,8 @@ jest.mock('firebase/auth', () => ({
 
 describe('Simple Test', () => {
   beforeEach(() => {
-    mockOnAuthStateChanged.mockImplementation((callback) => {
-      callback(null); // No user initially
-      return jest.fn(); // Return unsubscribe function
-    });
+    mockOnAuthStateChanged.mockReset();
+    mockOnAuthStateChanged.mockReturnValue(jest.fn());
   });
 
   it('renders a simple component', () => {
