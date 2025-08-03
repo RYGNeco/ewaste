@@ -35,6 +35,7 @@ import {
 } from 'react-icons/fa';
 import { getAuth, signOut, User } from 'firebase/auth';
 import '../../firebase';
+import api from '../../utils/api';
 
 const AdminPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -42,6 +43,9 @@ const AdminPage: React.FC = () => {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userData, setUserData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [pendingRoleRequests, setPendingRoleRequests] = useState<any[]>([]);
+  const [allEmployees, setAllEmployees] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -66,27 +70,114 @@ const AdminPage: React.FC = () => {
       const parsedUserData = JSON.parse(storedUserData);
       setUserData(parsedUserData);
       setUserRole(parsedUserData.role);
+
+      // Check if user has pending role approval
+      if (parsedUserData?.roleApprovalStatus === 'pending') {
+        navigate('/pending-approval');
+        return;
+      }
     }
-    
+
     // Redirect if not employee
     if (storedUserType !== 'employee') {
       navigate('/login');
     }
   }, [navigate]);
 
-  const handleLogout = async () => {
-    const auth = getAuth();
-    try {
-      await signOut(auth);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userType');
-      localStorage.removeItem('userData');
-      navigate('/');
-    } catch (err) {
-      console.error('Logout error:', err);
+// API Functions
+const fetchPendingRoleRequests = async () => {
+  try {
+    const response = await api.get('/role-requests/pending');
+    if (response && response.ok) {
+      const data = await response.json();
+      setPendingRoleRequests(data.data || []);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching role requests:', error);
+  }
+};
+
+const fetchAllEmployees = async () => {
+  try {
+    const response = await api.get('/users?userType=employee');
+    if (response && response.ok) {
+      const data = await response.json();
+      setAllEmployees(data.data || []);
+    }
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+  }
+};
+
+const approveRoleRequest = async (requestId: string, approvedRoles: string[]) => {
+  setIsLoading(true);
+  try {
+    const response = await api.put(`/role-requests/${requestId}/approve`, { approvedRoles });
+    if (response && response.ok) {
+      await fetchPendingRoleRequests();
+      await fetchAllEmployees();
+      alert('Role request approved successfully!');
+    } else {
+      const error = await response!.json();
+      alert(`Error: ${error.error}`);
+    }
+  } catch (error) {
+    console.error('Error approving role request:', error);
+    alert('Failed to approve role request');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+const rejectRoleRequest = async (requestId: string, reason: string) => {
+  setIsLoading(true);
+  try {
+    const response = await api.put(`/role-requests/${requestId}/reject`, { rejectionReason: reason });
+    if (response && response.ok) {
+      await fetchPendingRoleRequests();
+      await fetchAllEmployees();
+      alert('Role request rejected');
+    } else {
+      const error = await response!.json();
+      alert(`Error: ${error.error}`);
+    }
+  } catch (error) {
+    console.error('Error rejecting role request:', error);
+    alert('Failed to reject role request');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+const updateUserRole = async (userId: string, newRole: string) => {
+  setIsLoading(true);
+  try {
+    const response = await api.put(`/users/${userId}/role`, { role: newRole });
+    if (response && response.ok) {
+      await fetchAllEmployees();
+      alert('User role updated successfully!');
+    } else {
+      const error = await response!.json();
+      alert(`Error: ${error.error}`);
+    }
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    alert('Failed to update user role');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+// Load data when component mounts or tab changes
+useEffect(() => {
+  if (userData?.role === 'super_admin' || userData?.role === 'admin') {
+    if (activeTab === 'approvals') {
+      fetchPendingRoleRequests();
+    } else if (activeTab === 'employees') {
+      fetchAllEmployees();
+    }
+  }
+}, [activeTab, userData]);
 
   // Mock data
   const stats = [
@@ -200,32 +291,153 @@ const AdminPage: React.FC = () => {
     }
   ];
 
-  const pendingApprovals = [
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      email: 'alice@company.com',
-      requestedRole: 'Inventory Manager',
-      requestDate: '2024-01-15',
-      status: 'pending'
-    },
-    {
-      id: 2,
-      name: 'Bob Smith',
-      email: 'bob@company.com',
-      requestedRole: 'Transporter',
-      requestDate: '2024-01-14',
-      status: 'pending'
-    },
-    {
-      id: 3,
-      name: 'Carol Davis',
-      email: 'carol@company.com',
-      requestedRole: 'Coordinator',
-      requestDate: '2024-01-13',
-      status: 'pending'
-    }
+  // Available roles for dropdown
+  const availableRoles = [
+    'admin',
+    'inventory_manager', 
+    'transporter',
+    'coordinator'
   ];
+
+  const formatRoleName = (role: string) => {
+    return role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  // Role Approval Modal Component
+  const RoleApprovalModal: React.FC<{
+    request: any;
+    onApprove: (roles: string[]) => void;
+    onReject: (reason: string) => void;
+    availableRoles: string[];
+  }> = ({ request, onApprove, onReject, availableRoles }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalType, setModalType] = useState<'approve' | 'reject'>('approve');
+    const [selectedRoles, setSelectedRoles] = useState<string[]>(request.requestedRoles || []);
+    const [rejectionReason, setRejectionReason] = useState('');
+
+    const handleApprove = () => {
+      if (selectedRoles.length === 0) {
+        alert('Please select at least one role to approve');
+        return;
+      }
+      onApprove(selectedRoles);
+      setIsOpen(false);
+    };
+
+    const handleReject = () => {
+      if (!rejectionReason.trim()) {
+        alert('Please provide a reason for rejection');
+        return;
+      }
+      onReject(rejectionReason);
+      setIsOpen(false);
+    };
+
+    const toggleRole = (role: string) => {
+      setSelectedRoles(prev => 
+        prev.includes(role) 
+          ? prev.filter(r => r !== role)
+          : [...prev, role]
+      );
+    };
+
+    return (
+      <>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => {
+              setModalType('approve');
+              setSelectedRoles(request.requestedRoles || []);
+              setIsOpen(true);
+            }}
+            className="text-green-600 hover:text-green-900 px-2 py-1 rounded bg-green-50 text-xs"
+          >
+            Approve
+          </button>
+          <button 
+            onClick={() => {
+              setModalType('reject');
+              setIsOpen(true);
+            }}
+            className="text-red-600 hover:text-red-900 px-2 py-1 rounded bg-red-50 text-xs"
+          >
+            Reject
+          </button>
+        </div>
+
+        {isOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <h3 className="text-lg font-semibold mb-4">
+                {modalType === 'approve' ? 'Approve Role Request' : 'Reject Role Request'}
+              </h3>
+              
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-2">Employee: {request.employeeName}</p>
+                <p className="text-sm text-gray-600 mb-4">Email: {request.employeeEmail}</p>
+              </div>
+
+              {modalType === 'approve' ? (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select roles to approve:
+                  </label>
+                  <div className="space-y-2">
+                    {availableRoles.map(role => (
+                      <label key={role} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedRoles.includes(role)}
+                          onChange={() => toggleRole(role)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">{formatRoleName(role)}</span>
+                        {request.requestedRoles?.includes(role) && (
+                          <span className="ml-2 text-xs text-blue-600">(requested)</span>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Reason for rejection:
+                  </label>
+                  <textarea
+                    value={rejectionReason}
+                    onChange={(e) => setRejectionReason(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    rows={3}
+                    placeholder="Please provide a reason for rejecting this role request..."
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={modalType === 'approve' ? handleApprove : handleReject}
+                  className={`px-4 py-2 rounded-lg text-white ${
+                    modalType === 'approve' 
+                      ? 'bg-green-600 hover:bg-green-700' 
+                      : 'bg-red-600 hover:bg-red-700'
+                  }`}
+                >
+                  {modalType === 'approve' ? 'Approve' : 'Reject'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -522,7 +734,22 @@ const AdminPage: React.FC = () => {
 
   const RoleApprovals = () => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Role Approval Requests</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">Role Approval Requests</h2>
+        <button 
+          onClick={fetchPendingRoleRequests}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Refresh
+        </button>
+      </div>
+      
+      {isLoading && (
+        <div className="text-center py-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          <p className="text-gray-600 mt-2">Loading...</p>
+        </div>
+      )}
       
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -531,45 +758,201 @@ const AdminPage: React.FC = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requested Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requested Roles</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {pendingApprovals.map((approval, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{approval.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{approval.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{approval.requestedRole}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{approval.requestDate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      {getStatusIcon(approval.status)}
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(approval.status)}`}>
-                        {approval.status}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center gap-2">
-                      <button className="text-green-600 hover:text-green-900 px-2 py-1 rounded bg-green-50">
-                        Approve
-                      </button>
-                      <button className="text-red-600 hover:text-red-900 px-2 py-1 rounded bg-red-50">
-                        Reject
-                      </button>
-                    </div>
+              {pendingRoleRequests.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    No pending role requests
                   </td>
                 </tr>
-              ))}
+              ) : (
+                pendingRoleRequests.map((request: any, index: number) => (
+                  <tr key={request._id || index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {request.employeeName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {request.employeeEmail}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div className="flex flex-wrap gap-1">
+                        {request.requestedRoles?.map((role: string, idx: number) => (
+                          <span 
+                            key={idx}
+                            className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"
+                          >
+                            {formatRoleName(role)}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(request.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        {getStatusIcon(request.status)}
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
+                          {request.status}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center gap-2">
+                        <RoleApprovalModal 
+                          request={request}
+                          onApprove={(roles) => approveRoleRequest(request._id, roles)}
+                          onReject={(reason) => rejectRoleRequest(request._id, reason)}
+                          availableRoles={availableRoles}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </div>
     </div>
   );
+
+  // Employee Management Component
+  const EmployeeManagement = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">Employee Management</h2>
+        <button 
+          onClick={fetchAllEmployees}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Refresh
+        </button>
+      </div>
+      
+      {isLoading && (
+        <div className="text-center py-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          <p className="text-gray-600 mt-2">Loading...</p>
+        </div>
+      )}
+      
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approval Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {allEmployees.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                    No employees found
+                  </td>
+                </tr>
+              ) : (
+                allEmployees.map((employee: any, index: number) => (
+                  <tr key={employee._id || index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {employee.name || `${employee.firstName} ${employee.lastName}`}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {employee.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                        {formatRoleName(employee.role)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(employee.roleApprovalStatus)}`}>
+                        {employee.roleApprovalStatus}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(employee.status)}`}>
+                        {employee.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(employee.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      {userData?.role === 'super_admin' && (
+                        <RoleChangeDropdown 
+                          employee={employee}
+                          availableRoles={availableRoles}
+                          onRoleChange={(newRole) => updateUserRole(employee._id, newRole)}
+                        />
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Role Change Dropdown Component
+  const RoleChangeDropdown: React.FC<{
+    employee: any;
+    availableRoles: string[];
+    onRoleChange: (newRole: string) => void;
+  }> = ({ employee, availableRoles, onRoleChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+      <div className="relative">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-200 transition-colors text-xs"
+        >
+          Change Role
+        </button>
+        
+        {isOpen && (
+          <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+            <div className="py-1">
+              {availableRoles.map(role => (
+                <button
+                  key={role}
+                  onClick={() => {
+                    if (role !== employee.role) {
+                      onRoleChange(role);
+                    }
+                    setIsOpen(false);
+                  }}
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                    role === employee.role ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700'
+                  }`}
+                >
+                  {formatRoleName(role)}
+                  {role === employee.role && ' (Current)'}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const Settings = () => (
     <div className="space-y-6">
@@ -624,77 +1007,94 @@ const AdminPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'dashboard'
-                ? 'bg-green-100 text-green-700'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => setActiveTab('batches')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'batches'
-                ? 'bg-green-100 text-green-700'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Batches
-          </button>
-          <button
-            onClick={() => setActiveTab('partners')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'partners'
-                ? 'bg-green-100 text-green-700'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Partners
-          </button>
-          {userRole === 'admin' && (
+      {/* Tab Navigation */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div className="px-6 py-5 border-b border-gray-200">
+          <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setActiveTab('approvals')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === 'approvals'
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'dashboard'
                   ? 'bg-green-100 text-green-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
-              Role Approvals
+              Dashboard
             </button>
-          )}
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'analytics'
-                ? 'bg-green-100 text-green-700'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Analytics
-          </button>
-          <button
-            onClick={() => setActiveTab('settings')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === 'settings'
-                ? 'bg-green-100 text-green-700'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Settings
-          </button>
+            <button
+              onClick={() => setActiveTab('batches')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'batches'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Batches
+            </button>
+            <button
+              onClick={() => setActiveTab('partners')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'partners'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Partners
+            </button>
+            {(userData?.role === 'super_admin' || userData?.role === 'admin') && (
+              <>
+                <button
+                  onClick={() => setActiveTab('employees')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'employees'
+                      ? 'bg-green-100 text-green-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Employees
+                </button>
+                <button
+                  onClick={() => setActiveTab('approvals')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'approvals'
+                      ? 'bg-green-100 text-green-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Approvals
+                </button>
+              </>
+            )}
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'analytics'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Analytics
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'settings'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Settings
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Tab Content */}
+      {/* Content Area */}
+      <div className="space-y-6">
         {activeTab === 'dashboard' && <Dashboard />}
         {activeTab === 'batches' && <Batches />}
         {activeTab === 'partners' && <Partners />}
+        {activeTab === 'employees' && <EmployeeManagement />}
         {activeTab === 'approvals' && <RoleApprovals />}
         {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'settings' && <Settings />}

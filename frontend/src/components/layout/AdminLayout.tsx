@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { getAuth, signOut } from 'firebase/auth';
+import { FaSignOutAlt, FaUser } from 'react-icons/fa';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -10,7 +12,31 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isNavCollapsed, setIsNavCollapsed] = useState(isMobile);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userType');
+      localStorage.removeItem('userData');
+      navigate('/');
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -142,27 +168,59 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
             </button>
           </div>
         )}
-        <nav className={`${isMobile ? 'mt-4' : 'mt-6'} px-2`}>
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => isMobile && setIsMobileMenuOpen(false)}
-                className={`flex items-center px-4 py-3 mb-2 rounded-lg transition-colors duration-200 ${
-                  isActive
-                    ? 'bg-green-50 text-green-700'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
+        <nav className={`${isMobile ? 'mt-4' : 'mt-6'} px-2 flex flex-col h-full`}>
+          <div className="flex-1">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => isMobile && setIsMobileMenuOpen(false)}
+                  className={`flex items-center px-4 py-3 mb-2 rounded-lg transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-green-50 text-green-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="flex items-center justify-center">{item.icon}</span>
+                  {(!isNavCollapsed || isMobile) && (
+                    <span className="ml-3 font-medium">{item.title}</span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+          
+          {/* Sidebar Logout Button (Mobile/Collapsed) */}
+          {(isMobile || isNavCollapsed) && (
+            <div className="mt-auto mb-4">
+              {userData && (!isNavCollapsed || isMobile) && (
+                <div className="px-4 py-2 mb-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-2">
+                    <FaUser className="text-gray-500 text-sm" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-gray-700 truncate">
+                        {userData?.firstName || userData?.name || 'User'}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {userData?.role?.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Employee'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center px-4 py-3 rounded-lg text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 transition-colors duration-200"
               >
-                <span className="flex items-center justify-center">{item.icon}</span>
+                <FaSignOutAlt className="text-sm" />
                 {(!isNavCollapsed || isMobile) && (
-                  <span className="ml-3 font-medium">{item.title}</span>
+                  <span className="ml-3 font-medium">Logout</span>
                 )}
-              </Link>
-            );
-          })}
+              </button>
+            </div>
+          )}
         </nav>
       </aside>
 
@@ -198,11 +256,33 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
 
-          {/* Admin Profile */}
+          {/* Admin Profile and Logout */}
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700 hidden sm:inline">Admin User</span>
+            {/* User Info */}
+            <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hidden md:flex">
+              <FaUser className="text-gray-500 text-sm" />
+              <span className="text-sm font-medium text-gray-700">
+                {userData?.firstName || userData?.name || 'User'}
+              </span>
+              <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
+                {userData?.role?.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Employee'}
+              </span>
+            </div>
+            
+            {/* Profile Avatar */}
             <button className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-medium focus:outline-none hover:bg-green-200 transition-colors">
-              AU
+              {userData?.firstName?.charAt(0) || userData?.name?.charAt(0) || 'U'}
+              {userData?.lastName?.charAt(0) || ''}
+            </button>
+            
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 border border-red-200 hover:border-red-300 flex items-center gap-2 shadow-sm"
+              title="Sign out of your account"
+            >
+              <FaSignOutAlt className="text-sm" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </header>

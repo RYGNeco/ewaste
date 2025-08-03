@@ -44,7 +44,7 @@ const userSchema = new Schema<IUser>({
   },
   requestedRoles: [{
     type: String,
-    enum: ['admin', 'inventory_manager', 'transporter', 'coordinator']
+    enum: ['admin', 'inventory_manager', 'transporter', 'coordinator', 'super_admin']
   }],
   roleApprovalStatus: {
     type: String,
@@ -53,7 +53,7 @@ const userSchema = new Schema<IUser>({
   },
   approvedRoles: [{
     type: String,
-    enum: ['admin', 'inventory_manager', 'transporter', 'coordinator']
+    enum: ['admin', 'inventory_manager', 'transporter', 'coordinator', 'super_admin']
   }],
   status: {
     type: String,
