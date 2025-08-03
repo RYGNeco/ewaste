@@ -5,13 +5,16 @@ import {
   completeProfile,
   getCurrentUser,
   logout,
-  login
+  login,
+  googleSignIn,
+  completeProfileNew,
+  getProfileStatus
 } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
 
-// Google OAuth routes
+// Google OAuth routes (legacy)
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
@@ -21,8 +24,15 @@ router.get('/google/callback',
   oauthCallback
 );
 
-// Profile completion after Google OAuth
-router.post('/complete-profile', completeProfile);
+// New Firebase Google Auth endpoint
+router.post('/google-signin', googleSignIn);
+
+// Profile completion endpoints
+router.post('/complete-profile', completeProfile); // Legacy
+router.post('/complete-profile-new', authenticateToken, completeProfileNew); // New
+
+// Profile status check
+router.get('/profile-status', authenticateToken, getProfileStatus);
 
 // Get current user info
 router.get('/me', authenticateToken, getCurrentUser);

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaUser, FaBuilding, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIndustry, FaUsers, FaGlobe } from 'react-icons/fa';
+import AuthService, { ProfileCompletionData } from '../../services/AuthService';
 
 const CompleteProfile: React.FC = () => {
   const [userType, setUserType] = useState<'employee' | 'partner'>('employee');
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [isNewUser, setIsNewUser] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -27,6 +30,7 @@ const CompleteProfile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const employeeRoles = [
     { value: 'admin', label: 'Admin' },
@@ -34,6 +38,23 @@ const CompleteProfile: React.FC = () => {
     { value: 'transporter', label: 'Transporter' },
     { value: 'coordinator', label: 'Coordinator' }
   ];
+
+  // Handle data from Google Auth flow
+  useEffect(() => {
+    const state = location.state as any;
+    if (state?.user) {
+      setUserInfo(state.user);
+      setIsNewUser(state.isNewUser || false);
+      
+      // Pre-fill form with Google data
+      const names = state.user.name?.split(' ') || [];
+      setFormData(prev => ({
+        ...prev,
+        firstName: names[0] || '',
+        lastName: names.slice(1).join(' ') || ''
+      }));
+    }
+  }, [location.state]);
 
   const businessTypes = [
     'Corporation',
@@ -108,23 +129,17 @@ const CompleteProfile: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const payload = {
+      const profileData: ProfileCompletionData = {
         userType,
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
         ...(userType === 'employee' && {
-          requestedRoles: formData.requestedRoles,
-          requestReason: formData.requestReason
+          requestedRoles: formData.requestedRoles
         }),
         ...(userType === 'partner' && {
-          organizationName: formData.organizationName,
-          businessInfo: {
-            businessType: formData.businessType,
-            industry: formData.industry,
-            employeeCount: parseInt(formData.employeeCount) || 0,
-            website: formData.website
-          },
+          organization: formData.organizationName,
+          businessType: formData.businessType,
           address: {
             street: formData.street,
             city: formData.city,
@@ -135,46 +150,27 @@ const CompleteProfile: React.FC = () => {
         })
       };
 
-      const response = await fetch('/api/auth/complete-profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        credentials: 'include'
-      });
+      // Use AuthService to complete profile
+      const updatedUser = await AuthService.completeProfile(profileData);
 
-      const data = await response.json();
+      console.log('✅ Profile completed successfully:', updatedUser);
 
-      if (response.ok) {
-        // Store user data in localStorage
-        localStorage.setItem('userType', userType);
-        localStorage.setItem('userData', JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          userType,
-          ...(userType === 'employee' && {
-            requestedRoles: formData.requestedRoles,
-            roleApprovalStatus: 'pending'
-          }),
-          ...(userType === 'partner' && {
-            organizationName: formData.organizationName,
-            status: 'active'
-          })
-        }));
-
-        // Redirect based on user type
-        if (userType === 'employee') {
+      // Redirect based on user type and status
+      if (updatedUser.userType === 'employee') {
+        if (updatedUser.roleApprovalStatus === 'pending') {
           navigate('/pending-approval');
         } else {
-          navigate('/partner-dashboard');
+          navigate('/employee-dashboard');
         }
+      } else if (updatedUser.userType === 'partner') {
+        navigate('/partner-dashboard');
       } else {
-        setError(data.error || 'Failed to complete profile');
+        navigate('/dashboard');
       }
+
     } catch (error) {
-      console.error('Complete profile error:', error);
-      setError('Failed to complete profile. Please try again.');
+      console.error('❌ Profile completion failed:', error);
+      setError(error instanceof Error ? error.message : 'Failed to complete profile');
     } finally {
       setIsLoading(false);
     }

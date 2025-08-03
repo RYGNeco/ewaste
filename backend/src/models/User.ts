@@ -6,12 +6,17 @@ export interface IUser extends Document {
   email: string;
   firstName?: string;
   lastName?: string;
-  userType: 'employee' | 'partner' | 'super_admin';
-  role: string;
+  phone?: string;
+  profilePicture?: string;
+  organization?: string;
+  userType?: 'employee' | 'partner' | 'super_admin';
+  role?: string;
   requestedRoles: string[];
   roleApprovalStatus: 'pending' | 'approved' | 'rejected';
   approvedRoles: string[];
   status: 'active' | 'inactive' | 'pending';
+  profileCompleted?: boolean;
+  isActive?: boolean;
   createdAt: Date;
   updatedAt: Date;
   approvedBy?: string;
@@ -25,10 +30,12 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   firstName: { type: String },
   lastName: { type: String },
+  phone: { type: String },
+  profilePicture: { type: String },
+  organization: { type: String },
   userType: { 
     type: String, 
-    enum: ['employee', 'partner', 'super_admin'], 
-    required: true 
+    enum: ['employee', 'partner', 'super_admin']
   },
   role: { 
     type: String, 
@@ -60,6 +67,8 @@ const userSchema = new Schema<IUser>({
     enum: ['active', 'inactive', 'pending'],
     default: 'pending'
   },
+  profileCompleted: { type: Boolean, default: false },
+  isActive: { type: Boolean, default: true },
   approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   approvedAt: { type: Date },
   rejectionReason: { type: String }

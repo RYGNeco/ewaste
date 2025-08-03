@@ -1,5 +1,7 @@
 // Test setup file
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Set test environment variables with proper defaults
 process.env.NODE_ENV = 'test';
@@ -15,4 +17,4 @@ if (!process.env.VERBOSE) {
 }
 
 // Global test timeout
-jest.setTimeout(15000); 
+jest.setTimeout(15000);

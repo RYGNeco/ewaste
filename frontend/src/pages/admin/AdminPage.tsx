@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout';
+import RoleRequestManagement from '../../components/admin/RoleRequestManagement';
 import { 
   FaRecycle, 
   FaUsers, 
@@ -1095,7 +1096,7 @@ useEffect(() => {
         {activeTab === 'batches' && <Batches />}
         {activeTab === 'partners' && <Partners />}
         {activeTab === 'employees' && <EmployeeManagement />}
-        {activeTab === 'approvals' && <RoleApprovals />}
+        {activeTab === 'approvals' && <RoleRequestManagement />}
         {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'settings' && <Settings />}
       </div>

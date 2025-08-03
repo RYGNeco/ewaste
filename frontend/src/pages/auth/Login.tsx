@@ -4,6 +4,7 @@ import { FaGoogle, FaEye, FaEyeSlash, FaUser, FaBuilding, FaEnvelope, FaLock, Fa
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 
 const Login: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
@@ -332,13 +333,12 @@ const Login: React.FC = () => {
                           <span className="px-2 bg-white text-gray-500">Or continue with</span>
                         </div>
                       </div>
-                      <button
-                        onClick={handleGoogleSignIn}
-                        className="w-full mt-4 flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <FaGoogle className="text-red-500" />
-                        <span className="font-medium text-gray-700">Google</span>
-                      </button>
+                      <div className="mt-4">
+                        <GoogleSignInButton 
+                          onSuccess={(user) => console.log('Google sign-in successful:', user)}
+                          onError={(error) => console.error('Google sign-in failed:', error)}
+                        />
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -559,13 +559,12 @@ const Login: React.FC = () => {
                           <span className="px-2 bg-white text-gray-500">Or continue with</span>
                         </div>
                       </div>
-                      <button
-                        onClick={handleGoogleSignUp}
-                        className="w-full mt-4 flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <FaGoogle className="text-red-500" />
-                        <span className="font-medium text-gray-700">Google</span>
-                      </button>
+                      <div className="mt-4">
+                        <GoogleSignInButton 
+                          onSuccess={(user) => console.log('Google sign-up successful:', user)}
+                          onError={(error) => console.error('Google sign-up failed:', error)}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}

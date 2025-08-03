@@ -4,6 +4,7 @@ import User, { IUser } from '../models/User';
 import Partner, { IPartner } from '../models/Partner';
 import RoleRequest, { IRoleRequest } from '../models/RoleRequest';
 import bcrypt from 'bcrypt';
+import { auth } from '../config/firebase';
 
 const generateToken = (user: IUser) => {
   return signToken({ 
@@ -12,6 +13,224 @@ const generateToken = (user: IUser) => {
     userType: user.userType,
     email: user.email 
   });
+};
+
+// New Google Sign-In endpoint for Firebase Auth
+export const googleSignIn = async (req: Request, res: Response) => {
+  try {
+    const { idToken, googleId, email, name, profilePicture, emailVerified } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({ error: 'ID token is required' });
+    }
+
+    // Verify Firebase ID token
+    const decodedToken = await auth.verifyIdToken(idToken);
+    
+    if (!decodedToken) {
+      return res.status(401).json({ error: 'Invalid ID token' });
+    }
+
+    // Check if user already exists
+    let user = await User.findOne({ 
+      $or: [
+        { email: email },
+        { googleId: googleId }
+      ]
+    });
+
+    let isNewUser = false;
+
+    if (!user) {
+      // Create new user
+      isNewUser = true;
+      user = new User({
+        googleId: googleId,
+        email: email,
+        name: name,
+        firstName: name?.split(' ')[0] || '',
+        lastName: name?.split(' ').slice(1).join(' ') || '',
+        profilePicture: profilePicture,
+        userType: undefined, // Will be set in profile completion
+        role: undefined,
+        roleApprovalStatus: 'pending',
+        status: 'pending',
+        profileCompleted: false,
+        isActive: true
+      });
+      
+      await user.save();
+      console.log('✅ New user created:', user.email);
+    } else {
+      console.log('✅ Existing user found:', user.email);
+    }
+
+    // Generate JWT token
+    const token = generateToken(user);
+
+    return res.json({
+      success: true,
+      user: {
+        id: user._id,
+        googleId: user.googleId,
+        name: user.name,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profilePicture: user.profilePicture,
+        userType: user.userType,
+        role: user.role,
+        roleApprovalStatus: user.roleApprovalStatus,
+        profileCompleted: user.profileCompleted || false,
+        isActive: user.isActive
+      },
+      token,
+      isNewUser,
+      needsProfileCompletion: !user.profileCompleted || !user.userType
+    });
+
+  } catch (error) {
+    console.error('❌ Google sign-in error:', error);
+    return res.status(500).json({ 
+      error: 'Google sign-in failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Complete Profile endpoint (updated)
+export const completeProfileNew = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const { 
+      userType, 
+      firstName, 
+      lastName, 
+      phone, 
+      requestedRoles,
+      organization,
+      businessType,
+      address 
+    } = req.body;
+
+    // Find and update user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user profile
+    user.userType = userType;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.name = `${firstName} ${lastName}`;
+    user.phone = phone;
+    user.profileCompleted = true;
+
+    if (userType === 'employee') {
+      user.roleApprovalStatus = 'pending';
+      user.requestedRoles = requestedRoles || [];
+      user.status = 'pending';
+
+      // Create role request if roles are specified
+      if (requestedRoles && requestedRoles.length > 0) {
+        const roleRequest = new RoleRequest({
+          employeeId: user._id,
+          employeeEmail: user.email,
+          employeeName: user.name,
+          requestedRoles: requestedRoles,
+          requestReason: 'Profile completion role request',
+          status: 'pending',
+          priority: 'medium'
+        });
+        await roleRequest.save();
+      }
+    } else if (userType === 'partner') {
+      user.roleApprovalStatus = 'approved';
+      user.role = 'partner';
+      user.status = 'active';
+      user.organization = organization;
+
+      // Create partner record if needed
+      const existingPartner = await Partner.findOne({ email: user.email });
+      if (!existingPartner) {
+        const partner = new Partner({
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          organizationName: organization || user.name,
+          businessType: businessType || 'Other',
+          address: address,
+          status: 'active',
+          userId: user._id
+        });
+        await partner.save();
+      }
+    }
+
+    await user.save();
+
+    console.log('✅ Profile completed for user:', user.email);
+
+    return res.json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userType: user.userType,
+        role: user.role,
+        roleApprovalStatus: user.roleApprovalStatus,
+        profileCompleted: user.profileCompleted,
+        isActive: user.isActive
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Profile completion error:', error);
+    return res.status(500).json({ 
+      error: 'Profile completion failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+// Get profile status
+export const getProfileStatus = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json({
+      profileCompleted: user.profileCompleted || false,
+      needsApproval: user.userType === 'employee' && user.roleApprovalStatus === 'pending',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        userType: user.userType,
+        roleApprovalStatus: user.roleApprovalStatus,
+        profileCompleted: user.profileCompleted
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Profile status check error:', error);
+    return res.status(500).json({ error: 'Failed to check profile status' });
+  }
 };
 
 // Google OAuth callback handler

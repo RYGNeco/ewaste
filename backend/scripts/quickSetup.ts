@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 
-const quickSetup = async () => {
+const quickSetup = async (): Promise<void> => {
   console.log('🚀 Rygneco E-Waste Tracker - Quick Setup');
   console.log('=====================================\n');
 
@@ -28,22 +28,31 @@ const quickSetup = async () => {
 MONGODB_URI=mongodb://localhost:27017/rygneco
 
 # JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-here-change-this-in-production
+JWT_SECRET=your-super-secret-jwt-key-here
 
-# Google OAuth Configuration (Required for authentication)
-GOOGLE_CLIENT_ID=your-google-client-id-here
-GOOGLE_CLIENT_SECRET=your-google-client-secret-here
-
-# Super Admin Configuration
-SUPER_ADMIN_EMAIL=superadmin@rygneco.com
-SUPER_ADMIN_NAME=Super Administrator
-SUPER_ADMIN_FIRST_NAME=Super
-SUPER_ADMIN_LAST_NAME=Administrator
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 # Application Configuration
-FRONTEND_URL=http://localhost:3000
 NODE_ENV=development
-PORT=5000
+PORT=3001
+
+# Frontend Configuration
+FRONTEND_URL=http://localhost:5173
+
+# Email Configuration (Optional)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@example.com
+EMAIL_PASS=your-email-password
+
+# Redis Configuration (Optional)
+REDIS_URL=redis://localhost:6379
+
+# File Upload Configuration
+MAX_FILE_SIZE=10485760
+UPLOAD_PATH=uploads/
 `;
         
         fs.writeFileSync(envPath, basicEnv);
@@ -53,29 +62,20 @@ PORT=5000
       console.log('✅ .env file already exists');
     }
 
-    // Check if MongoDB is running
-    console.log('\n🗄️  Checking MongoDB connection...');
-    try {
-      execSync('mongosh --eval "db.runCommand(\'ping\')" --quiet', { stdio: 'pipe' });
-      console.log('✅ MongoDB is running');
-    } catch (error) {
-      console.log('⚠️  MongoDB connection failed. Please ensure MongoDB is running:');
-      console.log('   - Start MongoDB: mongod');
-      console.log('   - Or use Docker: docker run -d -p 27017:27017 --name mongodb mongo:latest');
-    }
-
-    // Install dependencies if node_modules doesn't exist
-    const nodeModulesPath = path.join(__dirname, '..', 'node_modules');
-    if (!fs.existsSync(nodeModulesPath)) {
+    // Check if package.json exists and install dependencies
+    const packageJsonPath = path.join(__dirname, '..', 'package.json');
+    if (fs.existsSync(packageJsonPath)) {
       console.log('\n📦 Installing dependencies...');
-      execSync('npm install', { stdio: 'inherit' });
-      console.log('✅ Dependencies installed');
-    } else {
-      console.log('\n✅ Dependencies already installed');
+      try {
+        execSync('npm install', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
+        console.log('✅ Dependencies installed successfully');
+      } catch (error) {
+        console.log('⚠️  Failed to install dependencies. Please run "npm install" manually.');
+      }
     }
 
     // Test database connection
-    console.log('\n🧪 Testing database connection...');
+    console.log('\n🔌 Testing database connection...');
     try {
       execSync('npm run test-setup', { stdio: 'pipe' });
       console.log('✅ Database connection successful');
@@ -96,14 +96,14 @@ PORT=5000
     console.log('   - AUTHENTICATION_FLOW.md');
 
   } catch (error) {
-    console.error('❌ Setup failed:', error.message);
+    console.error('❌ Setup failed:', (error as Error).message);
     process.exit(1);
   }
 };
 
 // Run the setup
 if (require.main === module) {
-  quickSetup();
+  quickSetup().catch(console.error);
 }
 
-module.exports = quickSetup; 
+export default quickSetup;
