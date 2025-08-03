@@ -135,7 +135,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      
       
       <div className="pt-16 pb-16">
         {/* Hero Section */}
@@ -377,7 +377,7 @@ const HomePage: React.FC = () => {
         </section>
       </div>
 
-      <Footer />
+      
     </div>
   );
 };

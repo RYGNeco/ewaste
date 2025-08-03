@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import EcoNavbar from '../../components/EcoNavbar';
+import EcoNavbar from '../../components/Navbar'; // Corrected the import path
 import {
   FaMobileAlt, FaExclamationTriangle, FaRecycle, FaArrowRight, FaArrowLeft, FaArrowUp, FaArrowDown, FaInfoCircle, FaGlobe, FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn
 } from 'react-icons/fa';

@@ -179,12 +179,12 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      <Navbar />
+      
       
       <div className="pt-16 pb-16">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
-            {/* Header */}
+            {/* Header
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 Welcome to RYGNeco
@@ -192,7 +192,7 @@ const Login: React.FC = () => {
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Join us in building a sustainable future through responsible e-waste management
               </p>
-            </div>
+            </div> */}
 
             {/* Tab Navigation */}
             <div className="flex justify-center mb-8">
@@ -668,7 +668,7 @@ const Login: React.FC = () => {
         </div>
       </div>
       
-      <Footer />
+  
     </div>
   );
 };

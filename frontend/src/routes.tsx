@@ -13,7 +13,7 @@ import ContactPage from './pages/public/ContactPage';
 import HowItWorksPage from './pages/public/HowItWorksPage';
 import EducationPage from './pages/public/EducationPage';
 import JoinUsPage from './pages/public/JoinUsPage';
-
+import ServicesPage from './pages/public/ServicePage'; 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -24,7 +24,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/how-it-works" element={<HowItWorksPage />} />
       <Route path="/education" element={<EducationPage />} />
       <Route path="/join-us" element={<JoinUsPage />} />
-      
+      <Route path="/services" element={<ServicesPage />} />
+
       {/* Auth Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
