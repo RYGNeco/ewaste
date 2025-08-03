@@ -1,0 +1,93 @@
+name: Security & Quality Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install Snyk CLI
+      run: npm install -g snyk
+      
+    - name: Install Shared Dependencies
+      run: |
+        cd shared
+        npm install
+    
+    # Snyk will work in free mode without authentication
+    - name: Snyk Auth
+      env: 
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      run: snyk auth $SNYK_TOKEN || echo "Running Snyk in free mode"
+      continue-on-error: true
+    
+    - name: Frontend Dependencies
+      run: |
+        cd frontend
+        npm install
+        npm ls --json > package-tree.json
+      
+    - name: Snyk Test - Frontend
+      working-directory: ./frontend
+      run: |
+        # Allow Snyk to find node_modules
+        ls -la
+        snyk test --severity-threshold=high --all-projects --detection-depth=6
+      continue-on-error: true
+    
+    - name: Backend Dependencies
+      run: |
+        cd backend
+        npm install
+        npm ls --json > package-tree.json
+        
+    - name: Snyk Test - Backend
+      working-directory: ./backend
+      run: |
+        # Allow Snyk to find node_modules
+        ls -la
+        snyk test --severity-threshold=high --all-projects --detection-depth=6
+      continue-on-error: true
+    
+    - name: Run Semgrep
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: >-
+          p/security-audit
+          p/secrets
+          p/owasp-top-ten
+      continue-on-error: true
+
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript, typescript
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2

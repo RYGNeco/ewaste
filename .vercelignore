@@ -1,0 +1,11 @@
+# Ignore everything except the frontend directory
+backend
+shared
+node_modules
+scripts
+*.log
+.git
+.github
+docker
+docs
+*.md
