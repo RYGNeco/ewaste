@@ -1,11 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { jest, fn, mock, type AuthStateCallback } from '../test-utils';
 
 // Mock Firebase Auth
-const mockOnAuthStateChanged = jest.fn();
-jest.mock('firebase/auth', () => ({
-  getAuth: jest.fn(() => ({
+const mockOnAuthStateChanged = fn<AuthStateCallback>();
+mock('firebase/auth', () => ({
+  getAuth: fn(() => ({
     onAuthStateChanged: mockOnAuthStateChanged
   }))
 }));

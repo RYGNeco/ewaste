@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { fn, createMockResponse, type MockFetch } from '../test-utils';
 
 // Mock fetch globally
-const mockFetch = jest.fn();
-global.fetch = mockFetch;
+const mockFetch = fn<typeof fetch>() as unknown as MockFetch;
+(global as any).fetch = mockFetch;
 
 describe('API Integration Tests', () => {
   beforeEach(() => {
@@ -13,10 +14,7 @@ describe('API Integration Tests', () => {
 
   it('handles successful API call', async () => {
     const mockData = { id: 1, name: 'Test User', email: 'test@example.com' };
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockData,
-    });
+    mockFetch.mockResolvedValueOnce(createMockResponse(mockData));
 
     const UserProfileComponent = () => {
       const [user, setUser] = React.useState<any>(null);
@@ -78,11 +76,7 @@ describe('API Integration Tests', () => {
   });
 
   it('handles API error response', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404,
-      statusText: 'Not Found',
-    });
+    mockFetch.mockResolvedValueOnce(createMockResponse({ error: 'Not found' }, false, 404, 'Not Found'));
 
     const UserProfileComponent = () => {
       const [user, setUser] = React.useState<any>(null);
@@ -195,10 +189,7 @@ describe('API Integration Tests', () => {
 
   it('handles form submission with API call', async () => {
     const mockResponse = { success: true, message: 'User created successfully' };
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockResponse,
-    });
+    mockFetch.mockResolvedValueOnce(createMockResponse(mockResponse));
 
     const CreateUserForm = () => {
       const [formData, setFormData] = React.useState({ name: '', email: '' });
@@ -290,14 +281,8 @@ describe('API Integration Tests', () => {
     ];
 
     mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockUsers,
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ id: 3, name: 'User 3' }),
-      });
+      .mockResolvedValueOnce(createMockResponse(mockUsers))
+      .mockResolvedValueOnce(createMockResponse({ id: 3, name: 'User 3' }));
 
     const UserListComponent = () => {
       const [users, setUsers] = React.useState<any[]>([]);
