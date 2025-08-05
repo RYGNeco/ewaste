@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { signToken, verifyToken } from '../config/jwt';
 import User, { IUser } from '../models/User';
 import Partner, { IPartner } from '../models/Partner';
@@ -231,6 +232,11 @@ export const login = async (req: Request, res: Response) => {
   }
   
   try {
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(500).json({ error: 'Database connection not available' });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -238,6 +244,14 @@ export const login = async (req: Request, res: Response) => {
 
     // For now, skip password verification since we're using Google OAuth
     // In production, you'd want to implement proper password hashing
+    // if (!password || !user.password) {
+    //   return res.status(401).json({ error: 'Invalid credentials' });
+    // }
+    
+    // const isValidPassword = await bcrypt.compare(password, user.password);
+    // if (!isValidPassword) {
+    //   return res.status(401).json({ error: 'Invalid credentials' });
+    // }
     
     const token = generateToken(user);
     res.cookie('token', token, {

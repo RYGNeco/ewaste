@@ -1,3 +1,14 @@
+// Type declarations for external analytics libraries
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+    mixpanel: any;
+  }
+}
+
+declare const gtag: (...args: any[]) => void;
+declare const mixpanel: any;
+
 // Comprehensive Analytics Service
 export interface AnalyticsEvent {
   event: string;

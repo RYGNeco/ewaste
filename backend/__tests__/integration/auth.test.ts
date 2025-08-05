@@ -11,10 +11,15 @@ describe('Auth API', () => {
     // Connect to test database
     try {
       const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/rygneco-test';
-      await mongoose.connect(mongoUri);
+      await mongoose.connect(mongoUri, {
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+      });
       console.log('✅ Connected to test database');
     } catch (error) {
       console.log('⚠️  Could not connect to test database, using mock tests');
+      console.error('Database connection error:', error);
     }
   });
 
