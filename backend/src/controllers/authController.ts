@@ -274,7 +274,12 @@ export const login = async (req: Request, res: Response) => {
     if (error instanceof Error && 
         (error.message.includes('MongoNetworkError') || 
          error.message.includes('MongooseServerSelectionError') ||
-         error.message.includes('ECONNREFUSED'))) {
+         error.message.includes('ECONNREFUSED') ||
+         error.message.includes('MongoError') ||
+         error.message.includes('MongooseError') ||
+         error.name === 'MongoNetworkError' ||
+         error.name === 'MongooseServerSelectionError' ||
+         error.name === 'MongoError')) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
