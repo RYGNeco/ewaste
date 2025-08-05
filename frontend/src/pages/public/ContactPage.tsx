@@ -127,22 +127,7 @@ const ContactPage: React.FC = () => {
       {/* Contact Methods */}
       <section className="px-4 pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 mb-20">
-            {contactMethods.map((method, index) => (
-              <a
-                key={index}
-                href={method.action}
-                className="group bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-2xl p-8 text-center transition-all duration-200 hover:shadow-lg"
-              >
-                <div className="w-16 h-16 mx-auto mb-6 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-                  <method.icon className="w-8 h-8 text-gray-700" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{method.title}</h3>
-                <p className="text-lg text-gray-900 font-medium mb-2">{method.value}</p>
-                <p className="text-gray-600 text-sm">{method.description}</p>
-              </a>
-            ))}
-          </div>
+        
 
           {/* Main Contact Form */}
           <div className="grid lg:grid-cols-5 gap-16">
@@ -314,6 +299,36 @@ const ContactPage: React.FC = () => {
                     For urgent matters, please call us directly.
                   </p>
                 </div>
+              </div>
+            </div>
+            
+          </div>
+          
+          {/* Contact Methods - Integrated Design */}
+          <div className="mt-16 mb-20">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 md:p-12">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Other ways to reach us</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Prefer a different way to connect? We're here to help.
+                </p>
+              </div>
+              
+              <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center">
+                {contactMethods.map((method, index) => (
+                  <a
+                    key={index}
+                    href={method.action}
+                    className="group flex-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-2xl p-6 md:p-8 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                  >
+                    <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 bg-gradient-to-br from-gray-900 to-gray-700 rounded-2xl flex items-center justify-center shadow-sm group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
+                      <method.icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{method.title}</h3>
+                    <p className="text-gray-900 font-medium mb-2 text-sm md:text-base">{method.value}</p>
+                    <p className="text-gray-500 text-xs md:text-sm">{method.description}</p>
+                  </a>
+                ))}
               </div>
             </div>
           </div>
