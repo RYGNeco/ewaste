@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for React Frontend
 
 # Development stage
-FROM node:18-alpine AS development
+FROM node:20-alpine AS development
 WORKDIR /app
 
 # Copy package files
@@ -18,7 +18,7 @@ EXPOSE 3000
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 # Production build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files and install dependencies
@@ -29,8 +29,8 @@ RUN npm install
 COPY frontend/ .
 COPY shared/ ./shared/
 
-# Add export statement to all empty TypeScript files
-RUN find src -type f \( -name "*.ts" -o -name "*.tsx" \) -exec sh -c 'if [ -s "$1" ] && ! grep -q "import\|export" "$1"; then echo "export {};" > /tmp/tmp_file && cat "$1" >> /tmp/tmp_file && mv /tmp/tmp_file "$1"; elif [ ! -s "$1" ]; then echo "export {};" > "$1"; fi' _ {} \;
+# Add export statement to all empty TypeScript files (excluding .d.ts files)
+RUN find src -type f \( -name "*.ts" -o -name "*.tsx" \) ! -name "*.d.ts" -exec sh -c 'if [ -s "$1" ] && ! grep -q "import\|export" "$1"; then echo "export {};" > /tmp/tmp_file && cat "$1" >> /tmp/tmp_file && mv /tmp/tmp_file "$1"; elif [ ! -s "$1" ]; then echo "export {};" > "$1"; fi' _ {} \;
 
 # Build for production
 RUN npm run build
