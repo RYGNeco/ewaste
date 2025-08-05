@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { signToken, verifyToken } from '../config/jwt';
 import User, { IUser } from '../models/User';
-import Partner, { IPartner } from '../models/Partner';
-import RoleRequest, { IRoleRequest } from '../models/RoleRequest';
+import Partner from '../models/Partner';
+import RoleRequest from '../models/RoleRequest';
 import bcrypt from 'bcrypt';
 
 const generateToken = (user: IUser) => {
@@ -21,11 +21,11 @@ export const oauthCallback = async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Authentication failed' });
   }
 
-  const googleUser = req.user as any;
+  const googleUser = req.user as Record<string, any>;
   
   try {
     // Check if user already exists
-    let user = await User.findOne({ email: googleUser.emails[0].value });
+    const user = await User.findOne({ email: googleUser.emails[0].value });
     
     if (!user) {
       // User doesn't exist, redirect to complete profile
@@ -87,7 +87,7 @@ export const completeProfile = async (req: Request, res: Response) => {
     }
 
     // Decode token to get user info
-    const decoded = verifyToken(tempToken) as any;
+    const decoded = verifyToken(tempToken) as Record<string, any>;
     
     if (userType === 'employee') {
       // Create employee user
@@ -186,7 +186,7 @@ export const completeProfile = async (req: Request, res: Response) => {
 // Get current user info
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findById((req as any).user.id);
+    const user = await User.findById((req as Record<string, any>).user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -219,12 +219,12 @@ export const logout = (req: Request, res: Response) => {
 
 // Protected route middleware
 export function protectedRoute(req: Request, res: Response) {
-  res.json({ message: 'Access granted', user: (req as any).user });
+  res.json({ message: 'Access granted', user: (req as Record<string, any>).user });
 }
 
 // Legacy login (for non-Google auth)
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   
   // Validate required fields
   if (!email) {
