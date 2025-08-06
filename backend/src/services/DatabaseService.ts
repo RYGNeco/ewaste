@@ -24,7 +24,11 @@ class DatabaseService {
       socketTimeoutMS: 45000,
       bufferMaxEntries: 0,
       retryWrites: true,
+<<<<<<< HEAD
+      w: 'majority'
+=======
       w: 'majority' as const
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     };
     
     await mongoose.connect(process.env.MONGODB_URI!, options);
@@ -35,7 +39,11 @@ class DatabaseService {
     return cached ? JSON.parse(cached) : null;
   }
 
+<<<<<<< HEAD
+  async setCached(key: string, value: any, ttl: number = 3600): Promise<void> {
+=======
   async setCached(key: string, value: any, ttl = 3600): Promise<void> {
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     await this.redis.setex(key, ttl, JSON.stringify(value));
   }
 

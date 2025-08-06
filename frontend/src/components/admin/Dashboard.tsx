@@ -1,3 +1,28 @@
+<<<<<<< HEAD
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import RoleRequestService, { RoleRequestStats } from '../../services/RoleRequestService';
+
+const Dashboard: React.FC = () => {
+  const [roleRequestStats, setRoleRequestStats] = useState<RoleRequestStats | null>(null);
+
+  useEffect(() => {
+    const fetchRoleRequestStats = async () => {
+      try {
+        const stats = await RoleRequestService.getRoleRequestStats();
+        setRoleRequestStats(stats);
+      } catch (error) {
+        console.error('Failed to fetch role request stats:', error);
+      }
+    };
+
+    fetchRoleRequestStats();
+  }, []);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-6">Super Admin Dashboard</h1>
+=======
 import React from 'react';
 import { 
   FaRecycle, 

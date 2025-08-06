@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
+import EcoNavbar from '../../components/EcoNavbar';
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 import {
   FaCalendarCheck, FaTruck, FaLock, FaSyncAlt, FaRegSmileBeam,
   FaDesktop, FaTabletAlt, FaMobileAlt, FaTv, FaNetworkWired, FaKeyboard, FaPlug, FaMicrophone, FaSearch, FaChevronDown, FaChevronUp, FaCertificate, FaChartBar, FaFileAlt, FaWeight, FaLeaf, FaClipboardList
 } from 'react-icons/fa';
+<<<<<<< HEAD
+import '../styles/HowItWorksPage.css';
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 const deviceCategories = [
   {
@@ -96,6 +104,18 @@ const HowItWorksPage = () => {
     const val = e.target.value;
     setSearch(val);
     let found = null;
+<<<<<<< HEAD
+    let related = null;
+    deviceCategories.forEach(cat => {
+      cat.items.forEach(item => {
+        if (item.toLowerCase().includes(val.toLowerCase())) found = item;
+        // Synonym match
+        if (val.toLowerCase() === 'macbook' && item.toLowerCase().includes('laptop')) related = item;
+      });
+    });
+    if (found) setSearchResult({ type: 'accepted', item: found });
+    else if (related) setSearchResult({ type: 'related', item: related });
+=======
     
     if (val.toLowerCase().includes('laptop') || val.toLowerCase().includes('computer')) {
       found = { type: 'accepted' as const, item: val };
@@ -104,11 +124,31 @@ const HowItWorksPage = () => {
     }
     
     if (found) setSearchResult(found);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     else if (val) setSearchResult({ type: 'notfound' });
     else setSearchResult(null);
   };
 
   return (
+<<<<<<< HEAD
+    <div className="howitworks-page eco-bg">
+      <EcoNavbar />
+      {/* Hero Section */}
+      <section className="howitworks-hero" aria-label="E-waste recycling illustration">
+        <img src="/illustrative-diagram-electrical-waste-recycling-process-step-223221443.jpg" alt="Illustration of e-waste recycling process" style={{ width: '100%', maxHeight: '350px', objectFit: 'cover', borderRadius: '1rem' }} />
+      </section>
+
+      {/* Our Process */}
+      <section id="our-process" className="howitworks-process">
+        <h2>Our Process</h2>
+        <p>From collection to refurbishment, reuse to responsible recycling, our process is designed with purpose. We make it easy, transparent, and impactful—so you can be part of the solution, every step of the way.</p>
+        <div className="howitworks-steps">
+          <div className="howitworks-step"><FaCalendarCheck /> <span>Schedule: Schedule a pickup for your e-waste through our easy online form.</span></div>
+          <div className="howitworks-step"><FaTruck /> <span>Collect: Our team collects your devices from your location at the scheduled time.</span></div>
+          <div className="howitworks-step"><FaLock /> <span>Secure: All data is securely wiped from all devices following industry standards.</span></div>
+          <div className="howitworks-step"><FaSyncAlt /> <span>Process: Devices are refreshed, repurposed, or responsibly recycled.</span></div>
+          <div className="howitworks-step"><FaRegSmileBeam /> <span>Impact: Receive detailed reports on your environmental impact and data security.</span></div>
+=======
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       
       {/* Hero Section */}
@@ -151,10 +191,47 @@ const HowItWorksPage = () => {
               <span className="font-semibold text-gray-900">Impact: Receive detailed reports on your environmental impact and data security.</span>
             </div>
           </div>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         </div>
       </section>
 
       {/* What Items We Accept */}
+<<<<<<< HEAD
+      <section id="items-we-accept" className="howitworks-items">
+        <h2>What Items We Accept</h2>
+        <p>Aren’t sure if you can turn in a specific item? Use our search tool below to look up specific items!</p>
+        <div className="howitworks-contact">
+          <span>Email: <a href="mailto:info@rygneco.com">info@rygneco.com</a></span>
+          <span>Phone: <a href="tel:+161679gneco">+1 (616)-RYGNECO</a></span>
+        </div>
+        <div className="howitworks-searchbar">
+          <FaSearch />
+          <input type="text" value={search} onChange={handleSearch} placeholder="Search for an item..." aria-label="Search for an item" />
+        </div>
+          {searchResult && (
+            <div className="howitworks-search-result">
+              {searchResult.type === 'accepted' && <span>✅ "{searchResult.item}" — Accepted</span>}
+              {searchResult.type === 'related' && <span>Did you mean...<br />✅ "Laptops" — Accepted</span>}
+              {searchResult.type === 'notfound' && <span>We currently do not accept this item for recycling.</span>}
+              <Link to="#items-we-accept">See all accepted Small Household Electronics →</Link>
+            </div>
+          )}
+        <div className="howitworks-categories">
+          {deviceCategories.map((cat, idx) => (
+            <div key={cat.title} className="howitworks-category">
+              <button className="howitworks-category-btn" onClick={() => setExpandedCat(expandedCat === idx ? null : idx)} aria-expanded={expandedCat === idx} aria-controls={`cat-panel-${idx}`}>
+                {cat.icon} {cat.title} {expandedCat === idx ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+              {expandedCat === idx && (
+                <div id={`cat-panel-${idx}`} className="howitworks-category-panel">
+                  <ul>
+                    {cat.items.map(item => <li key={item}>{item}</li>)}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+=======
       <section id="items-we-accept" className="py-16 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">What Items We Accept</h2>
@@ -218,10 +295,37 @@ const HowItWorksPage = () => {
               </div>
             ))}
           </div>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         </div>
       </section>
 
       {/* Sorting Section */}
+<<<<<<< HEAD
+      <section id="sorting" className="howitworks-sorting">
+        <h2>How Do We Sort Your E-Waste?</h2>
+        <p>At RYGNeco, we sort your e-waste into three categories described in the table below.</p>
+        <table className="howitworks-table">
+          <thead>
+            <tr><th>Category</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Refurbishable</td><td>Devices that can be repaired, reused, or donated</td></tr>
+            <tr><td>Recyclable</td><td>Broken/non-working devices that can be dismantled for materials</td></tr>
+            <tr><td>Hazardous</td><td>Items requiring special handling (e.g., batteries, old monitors)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      {/* Reports Section */}
+      <section id="reports" className="howitworks-reports">
+        <h2>Recycling Reports You Can Rely On</h2>
+        <div className="howitworks-reports-list">
+          {reportsList.map(report => (
+            <div key={report.title} className="howitworks-report-card">
+              {report.icon} <span>{report.title}</span>
+            </div>
+          ))}
+=======
       <section id="sorting" className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">How Do We Sort Your E-Waste?</h2>
@@ -267,10 +371,46 @@ const HowItWorksPage = () => {
               </div>
             ))}
           </div>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         </div>
       </section>
 
       {/* FAQ Section */}
+<<<<<<< HEAD
+      <section id="faq" className="howitworks-faq">
+        <h2>Frequently Asked Questions</h2>
+        <div className="howitworks-faq-list">
+          {faqList.map((faq, idx) => (
+            <div key={faq.q} className="howitworks-faq-item">
+              <button className="howitworks-faq-btn" aria-expanded={faqOpen[idx]} aria-controls={`faq-panel-${idx}`} onClick={() => setFaqOpen(faqOpen.map((open, i) => i === idx ? !open : open))}>
+                {faqOpen[idx] ? <FaChevronUp /> : <FaChevronDown />} {faq.q}
+              </button>
+              {faqOpen[idx] && (
+                <div id={`faq-panel-${idx}`} className="howitworks-faq-panel">
+                  <p>{faq.a}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-links">
+          <Link to="#items-we-accept">What Items We Accept</Link>
+          <Link to="/events">Events Page</Link>
+          <Link to="/about">About</Link>
+          <Link to="/services">Services</Link>
+          <Link to="/faqs">FAQs</Link>
+          <Link to="/contact">Contact Us</Link>
+        </div>
+        <div className="footer-info">
+          <span>© {new Date().getFullYear()} RYGNeco. All rights reserved.</span>
+          <span className="footer-tagline">Empowering responsible e-waste recycling for a cleaner, greener future.</span>
+        </div>
+      </footer>
+=======
       <section id="faq" className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
@@ -296,6 +436,7 @@ const HowItWorksPage = () => {
           </div>
         </div>
       </section>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     </div>
   );
 };

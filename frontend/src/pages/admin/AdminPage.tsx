@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout';
+<<<<<<< HEAD
+import RoleRequestManagement from '../../components/admin/RoleRequestManagement';
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 import { 
   FaRecycle, 
   FaUsers, 
@@ -36,7 +40,10 @@ import {
 import { getAuth, signOut, User } from 'firebase/auth';
 import '../../firebase';
 import api from '../../utils/api';
+<<<<<<< HEAD
+=======
 import { getActiveTabFromPath, hasAccessToSection } from '../../config/adminNavigation';
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 const AdminPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -85,6 +92,8 @@ const AdminPage: React.FC = () => {
     }
   }, [navigate]);
 
+<<<<<<< HEAD
+=======
   // Handle navigation from sidebar
   const handleNavigation = (section: string) => {
     // Check if user has access to this section
@@ -101,6 +110,7 @@ const AdminPage: React.FC = () => {
     setActiveTab(activeTab);
   }, [location.pathname]);
 
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 // API Functions
 const fetchPendingRoleRequests = async () => {
   try {
@@ -1023,14 +1033,104 @@ useEffect(() => {
   }
 
   return (
+<<<<<<< HEAD
+    <AdminLayout>
+      {/* Tab Navigation */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div className="px-6 py-5 border-b border-gray-200">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'dashboard'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('batches')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'batches'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Batches
+            </button>
+            <button
+              onClick={() => setActiveTab('partners')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'partners'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Partners
+            </button>
+            {(userData?.role === 'super_admin' || userData?.role === 'admin') && (
+              <>
+                <button
+                  onClick={() => setActiveTab('employees')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'employees'
+                      ? 'bg-green-100 text-green-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Employees
+                </button>
+                <button
+                  onClick={() => setActiveTab('approvals')}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'approvals'
+                      ? 'bg-green-100 text-green-700'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Approvals
+                </button>
+              </>
+            )}
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'analytics'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Analytics
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`px-5 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'settings'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Settings
+            </button>
+          </div>
+        </div>
+      </div>
+
+=======
     <AdminLayout onNavigate={handleNavigation}>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       {/* Content Area */}
       <div className="space-y-6">
         {activeTab === 'dashboard' && <Dashboard />}
         {activeTab === 'batches' && <Batches />}
         {activeTab === 'partners' && <Partners />}
         {activeTab === 'employees' && <EmployeeManagement />}
+<<<<<<< HEAD
+        {activeTab === 'approvals' && <RoleRequestManagement />}
+=======
         {activeTab === 'approvals' && <RoleApprovals />}
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'settings' && <Settings />}
       </div>

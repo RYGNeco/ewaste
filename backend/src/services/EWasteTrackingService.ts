@@ -53,6 +53,10 @@ export class EWasteTrackingService {
     const qrCodeDataUrl = await QRCode.toDataURL(trackingUrl, {
       errorCorrectionLevel: 'M',
       type: 'image/png',
+<<<<<<< HEAD
+      quality: 0.92,
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       margin: 1,
       color: {
         dark: '#000000',

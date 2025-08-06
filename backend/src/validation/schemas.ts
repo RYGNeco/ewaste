@@ -36,7 +36,11 @@ export const partnerSchemas = {
       firstName: Joi.string().min(1).max(50).required(),
       lastName: Joi.string().min(1).max(50).required(),
       email: Joi.string().email().required(),
+<<<<<<< HEAD
+      phone: Joi.string().pattern(/^[\+]?[1-9][\d]{0,15}$/).required()
+=======
       phone: Joi.string().pattern(/^[+]?[1-9][\d]{0,15}$/).required()
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     }).required(),
     address: Joi.object({
       street: Joi.string().min(5).max(200).required(),

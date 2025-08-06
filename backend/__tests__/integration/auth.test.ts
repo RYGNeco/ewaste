@@ -11,6 +11,12 @@ describe('Auth API', () => {
     // Connect to test database
     try {
       const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/rygneco-test';
+<<<<<<< HEAD
+      await mongoose.connect(mongoUri);
+      console.log('✅ Connected to test database');
+    } catch (error) {
+      console.log('⚠️  Could not connect to test database, using mock tests');
+=======
       await mongoose.connect(mongoUri, {
         maxPoolSize: 10,
         serverSelectionTimeoutMS: 5000,
@@ -20,6 +26,7 @@ describe('Auth API', () => {
     } catch (error) {
       console.log('⚠️  Could not connect to test database, using mock tests');
       console.error('Database connection error:', error);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     }
   });
 
@@ -47,6 +54,10 @@ describe('Auth API', () => {
       .post('/api/auth/login')
       .send({ email: 'nonexistent@example.com', password: 'wrongpassword' });
     
+<<<<<<< HEAD
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe('Invalid credentials');
+=======
     // Log the response for debugging
     console.log('Login test response:', { status: res.status, body: res.body });
     
@@ -60,6 +71,7 @@ describe('Auth API', () => {
       // Accept any error message for database issues
       expect(res.body.error).toBeDefined();
     }
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   }, 10000);
 
   it('should handle missing email in login', async () => {

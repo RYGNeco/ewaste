@@ -1,11 +1,18 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+<<<<<<< HEAD
+
+// Mock fetch globally
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
+=======
 import { fn, createMockResponse, type MockFetch } from '../test-utils';
 
 // Mock fetch globally
 const mockFetch = fn<typeof fetch>() as unknown as MockFetch;
 (global as any).fetch = mockFetch;
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 describe('API Integration Tests', () => {
   beforeEach(() => {
@@ -14,7 +21,14 @@ describe('API Integration Tests', () => {
 
   it('handles successful API call', async () => {
     const mockData = { id: 1, name: 'Test User', email: 'test@example.com' };
+<<<<<<< HEAD
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockData,
+    });
+=======
     mockFetch.mockResolvedValueOnce(createMockResponse(mockData));
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
     const UserProfileComponent = () => {
       const [user, setUser] = React.useState<any>(null);
@@ -76,7 +90,15 @@ describe('API Integration Tests', () => {
   });
 
   it('handles API error response', async () => {
+<<<<<<< HEAD
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      statusText: 'Not Found',
+    });
+=======
     mockFetch.mockResolvedValueOnce(createMockResponse({ error: 'Not found' }, false, 404, 'Not Found'));
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
     const UserProfileComponent = () => {
       const [user, setUser] = React.useState<any>(null);
@@ -189,7 +211,14 @@ describe('API Integration Tests', () => {
 
   it('handles form submission with API call', async () => {
     const mockResponse = { success: true, message: 'User created successfully' };
+<<<<<<< HEAD
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    });
+=======
     mockFetch.mockResolvedValueOnce(createMockResponse(mockResponse));
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
     const CreateUserForm = () => {
       const [formData, setFormData] = React.useState({ name: '', email: '' });
@@ -281,8 +310,19 @@ describe('API Integration Tests', () => {
     ];
 
     mockFetch
+<<<<<<< HEAD
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockUsers,
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: 3, name: 'User 3' }),
+      });
+=======
       .mockResolvedValueOnce(createMockResponse(mockUsers))
       .mockResolvedValueOnce(createMockResponse({ id: 3, name: 'User 3' }));
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
     const UserListComponent = () => {
       const [users, setUsers] = React.useState<any[]>([]);

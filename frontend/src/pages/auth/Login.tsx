@@ -1,12 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle, FaEye, FaEyeSlash, FaUser, FaBuilding, FaEnvelope, FaLock, FaArrowRight, FaRecycle } from 'react-icons/fa';
+<<<<<<< HEAD
+import { getAuth, signInWithPopup, GoogleAuthProvider, User, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
+import app from '../../firebase'; // adjust path as needed
+
+interface CustomClaims {
+  registered?: boolean;
+  approved?: boolean;
+  rejected?: boolean;
+  userType?: 'employee' | 'partner';
+  role?: string;
+}
+import axios from 'axios';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: '/api',  // This will use the Vite proxy
+  withCredentials: true, // Important for CORS
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
+
+// Add response interceptor for error handling
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userType');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+const Login: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('login');
+  
+  const isLoginTab = (tab: string): tab is 'login' => tab === 'login';
+  const isSignupTab = (tab: string): tab is 'signup' => tab === 'signup';
+=======
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 const Login: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const [loginType, setLoginType] = useState<'employee' | 'partner'>('employee');
   const [registerType, setRegisterType] = useState<'employee' | 'partner'>('employee');
   const [showPassword, setShowPassword] = useState(false);
@@ -61,11 +107,189 @@ const Login: React.FC = () => {
     }
   };
 
+<<<<<<< HEAD
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
+      const result = await signInWithPopup(auth, provider);
+      const db = getFirestore();
+      
+      // Check if user exists in Firestore
+      const userDocRef = doc(db, 'users', result.user.uid);
+      const userSnapshot = await getDoc(userDocRef);
+      
+      try {
+        // Force token refresh to get latest custom claims
+        await result.user.getIdTokenResult(true);
+        const idTokenResult = await result.user.getIdTokenResult();
+        const customClaims = idTokenResult.claims as CustomClaims;
+        const idToken = await result.user.getIdToken();
+      
+        // Check if user exists in our system
+        if (!customClaims.registered) {
+          // New user, show registration form
+          setActiveTab('signup');
+          // Store Google profile data temporarily
+          setFormData(prev => ({
+            ...prev,
+            email: result.user.email || '',
+            firstName: result.user.displayName?.split(' ')[0] || '',
+            lastName: result.user.displayName?.split(' ').slice(1).join(' ') || ''
+          }));
+          
+
+      // This is a registration with Google OAuth
+      // Create or update user document in Firestore
+      const userDoc: any = {
+        uid: result.user.uid,
+        email: result.user.email,
+        displayName: result.user.displayName || '',
+        photoURL: result.user.photoURL || '',
+        userType: registerType,
+        requestedRole: registerType === 'employee' ? 
+          formData.selectedRole.toLowerCase().replace(' ', '_') : 
+          'partner',
+        emailVerified: result.user.emailVerified,
+        approved: false,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      };
+      if (registerType === 'partner' && formData.companyName) {
+        userDoc.organization = formData.companyName;
+      }
+
+      // Save to Firestore
+      await setDoc(doc(db, 'users', result.user.uid), userDoc);
+
+          // Also send to backend for custom claims
+          const registrationData = {
+            idToken,
+            ...userDoc
+          };
+
+          const response = await api.post<{ success: boolean }>('/auth/google-register', registrationData);
+
+          if (response.data.success) {
+            alert('✅ Registration successful! Your account is pending approval. You will receive an email when approved.');
+            navigate('/auth/pending-approval');
+          }
+        } else {
+          // Existing user, check approval status from custom claims
+          const loginData = {
+            googleId: result.user.uid,
+            idToken
+          };
+
+          // Check custom claims
+          if (!customClaims.approved) {
+            if (customClaims.rejected) {
+              alert('Your account request has been rejected. Please contact support.');
+              await auth.signOut();
+              navigate('/auth/rejected');
+              return;
+            } else {
+              alert('Your account is pending approval. Please wait for admin approval.');
+              await auth.signOut();
+              navigate('/auth/pending-approval');
+              return;
+            }
+          }
+            
+          // User is approved, proceed with login
+          const response = await api.post<{
+            success: boolean;
+            token: string;
+            user: { userType: string }
+          }>('/auth/google-signin', loginData);
+
+          if (response.data.success) {
+            // Store the latest custom claims and user data
+            localStorage.setItem('userClaims', JSON.stringify(customClaims));
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            localStorage.setItem('userType', response.data.user.userType);
+
+            // Redirect based on role from custom claims
+            if (customClaims.userType === 'employee') {
+              navigate('/admin');
+            } else {
+              navigate('/dashboard');
+            }
+          }
+        }
+      } catch (signInError: unknown) {
+        const error = signInError as { response?: { data?: { needsRegistration?: boolean } } };
+        console.error('Sign-in error:', error);
+        if (error.response?.data?.needsRegistration) {
+          setActiveTab('signup');
+        } else {
+          throw error;
+        }
+      }
+
+    } catch (error: unknown) {
+      const e = error as Error & { code?: string };
+      console.error('Google Sign In Error:', e);
+      if (e.code === 'auth/popup-closed-by-user') {
+        alert('Sign in was cancelled');
+      } else {
+        alert('Failed to sign in with Google. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+
+  };
+
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+<<<<<<< HEAD
+      const response = await api.post('/auth/login', {
+        email: formData.email,
+        password: formData.password,
+        userType: loginType
+      });
+
+      if (response.data.success) {
+        // Check account status
+        const { accountStatus } = response.data.user;
+        
+        if (accountStatus === 'pending') {
+          alert('Your account is pending approval. Please wait for an admin to approve your account.');
+          navigate('/auth/pending-approval');
+          return;
+        } else if (accountStatus === 'rejected') {
+          alert('Your account request has been rejected. Please contact support for more information.');
+          navigate('/auth/rejected');
+          return;
+        }
+
+        // Store user data and token
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('userType', loginType);
+
+        // Redirect based on user type
+        if (loginType === 'employee') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
+      }
+    } catch (error: any) {
+      console.error('Login error:', error);
+      alert(error.response?.data?.message || 'Login failed. Please try again.');
+=======
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -85,6 +309,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     } finally {
       setIsLoading(false);
     }
@@ -94,6 +319,71 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
+<<<<<<< HEAD
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Validate form
+      if (formData.password !== formData.confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      if (passwordStrength < 3) {
+        alert('Please choose a stronger password');
+        return;
+      }
+
+      // Prepare registration data
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        displayName: `${formData.firstName} ${formData.lastName}`,
+        userType: registerType,
+        requestedRole: registerType === 'employee' ? formData.selectedRole.toLowerCase().replace(' ', '_') : 'partner',
+        organization: registerType === 'partner' ? formData.companyName : undefined,
+        approved: false,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      };
+
+      const db = getFirestore();
+
+      // First create the user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      
+      // Then save user data to Firestore
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
+        uid: userCredential.user.uid,
+        ...userData
+      });
+
+      // Finally register with backend for custom claims
+      const response = await api.post('/auth/manual-register', {
+        ...userData,
+        uid: userCredential.user.uid
+      });
+
+      if (response.data.success) {
+        // Store the token and user info
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        // Show success message and redirect to pending approval
+        alert('Registration successful! Your account is pending admin approval. You will receive an email notification once approved.');
+        navigate('/auth/pending-approval');
+      }
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      alert(errorMessage);
+=======
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -117,11 +407,15 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error('Signup error:', error);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     } finally {
       setIsLoading(false);
     }
   };
 
+<<<<<<< HEAD
+
+=======
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
@@ -169,6 +463,7 @@ const Login: React.FC = () => {
       console.error('Google sign-up error:', error);
     }
   };
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   const getPasswordStrengthColor = () => {
     if (passwordStrength <= 2) return 'bg-red-500';
@@ -179,12 +474,20 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+<<<<<<< HEAD
+      <Navbar />
+=======
       
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       
       <div className="pt-16 pb-16">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
+<<<<<<< HEAD
+            {/* Header */}
+=======
             {/* Header
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 Welcome to RYGNeco
@@ -192,7 +495,11 @@ const Login: React.FC = () => {
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Join us in building a sustainable future through responsible e-waste management
               </p>
+<<<<<<< HEAD
+            </div>
+=======
             </div> */}
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
             {/* Tab Navigation */}
             <div className="flex justify-center mb-8">
@@ -228,7 +535,11 @@ const Login: React.FC = () => {
                   /* Login Form */
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">Welcome Back</h2>
+<<<<<<< HEAD
+
+=======
                     
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                     {/* User Type Selection */}
                     <div className="mb-6">
                       <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -322,6 +633,26 @@ const Login: React.FC = () => {
                       </button>
                     </form>
 
+<<<<<<< HEAD
+                    <div className="relative my-6">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-white text-gray-500">Or</span>
+                      </div>
+                    </div>
+
+                    {/* Google Sign In Button */}
+                    <button
+                      onClick={handleGoogleSignIn}
+                      disabled={isLoading}
+                      className="w-full flex justify-center items-center px-4 py-3 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <FaGoogle className="text-red-500 mr-2" />
+                      Sign in with Google
+                    </button>
+=======
                     {/* Google Sign In */}
                     <div className="mt-6">
                       <div className="relative">
@@ -340,6 +671,7 @@ const Login: React.FC = () => {
                         <span className="font-medium text-gray-700">Google</span>
                       </button>
                     </div>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                   </div>
                 ) : (
                   /* Signup Form */
@@ -549,6 +881,26 @@ const Login: React.FC = () => {
                       </button>
                     </form>
 
+<<<<<<< HEAD
+                    <div className="relative my-6">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-white text-gray-500">Or</span>
+                      </div>
+                    </div>
+
+                    {/* Google Sign Up Button */}
+                    <button
+                      onClick={handleGoogleSignIn}
+                      disabled={isLoading}
+                      className="w-full flex justify-center items-center px-4 py-3 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <FaGoogle className="text-red-500 mr-2" />
+                      Sign up with Google
+                    </button>
+=======
                     {/* Google Sign Up */}
                     <div className="mt-6">
                       <div className="relative">
@@ -567,6 +919,7 @@ const Login: React.FC = () => {
                         <span className="font-medium text-gray-700">Google</span>
                       </button>
                     </div>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                   </div>
                 )}
               </div>
@@ -668,7 +1021,11 @@ const Login: React.FC = () => {
         </div>
       </div>
       
+<<<<<<< HEAD
+      <Footer />
+=======
   
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     </div>
   );
 };

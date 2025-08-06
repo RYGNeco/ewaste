@@ -17,6 +17,11 @@ import batchRoutes from './routes/batches';
 import analyticsRoutes from './routes/analytics';
 import uploadRoutes from './routes/uploads';
 import roleRequestRoutes from './routes/roleRequests';
+<<<<<<< HEAD
+import twoFactorRoutes from './routes/twoFactor';
+import { adminRoutes } from './routes/adminRoutes';
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 // Middleware
 import { errorHandler } from './middleware/errorHandler';
@@ -51,6 +56,11 @@ app.use('/api/batches', batchRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/role-requests', roleRequestRoutes);
+<<<<<<< HEAD
+app.use('/api/2fa', twoFactorRoutes);
+app.use('/api/admin', adminRoutes);
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 // CORS preflight requests
 app.options('*', cors());

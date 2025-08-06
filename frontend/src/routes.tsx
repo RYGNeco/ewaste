@@ -4,17 +4,30 @@ import HomePage from './pages/public/HomePage';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import CompleteProfile from './pages/auth/CompleteProfile';
+<<<<<<< HEAD
+import RoleRejected from './pages/auth/RoleRejected';
+import SuperAdminLogin from './pages/auth/SuperAdminLogin';
+import TwoFactorPage from './pages/auth/TwoFactorPage';
+import SecurityPage from './pages/auth/SecurityPage';
+import AdminPage from './pages/admin/AdminPage';
+import PartnerDashboard from './pages/partner/PartnerDashboard';
+=======
 import PendingApproval from './pages/auth/PendingApproval';
 import RoleRejected from './pages/auth/RoleRejected';
 import AdminPage from './pages/admin/AdminPage';
 import PartnerPage from './pages/partner/PartnerPage';
 import PartnerAuthGuard from './components/partner/PartnerAuthGuard';
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 import AboutUsPage from './pages/public/AboutUsPage';
 import ContactPage from './pages/public/ContactPage';
 import HowItWorksPage from './pages/public/HowItWorksPage';
 import EducationPage from './pages/public/EducationPage';
 import JoinUsPage from './pages/public/JoinUsPage';
+<<<<<<< HEAD
+import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
+=======
 import ServicesPage from './pages/public/ServicePage'; 
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 const AppRoutes: React.FC = () => {
   return (
@@ -26,6 +39,23 @@ const AppRoutes: React.FC = () => {
       <Route path="/how-it-works" element={<HowItWorksPage />} />
       <Route path="/education" element={<EducationPage />} />
       <Route path="/join-us" element={<JoinUsPage />} />
+<<<<<<< HEAD
+      
+      {/* Auth Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/admin-login" element={<SuperAdminLogin />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/complete-profile" element={<CompleteProfile />} />
+      <Route path="/role-rejected" element={<RoleRejected />} />
+      <Route path="/2fa-verify" element={<TwoFactorPage />} />
+      <Route path="/security" element={<SecurityPage />} />
+      
+      {/* Protected Routes */}
+      <Route path="/admin/*" element={<AdminPage />} />
+      <Route path="/admin/approvals" element={<SuperAdminDashboard />} />
+      <Route path="/partner-dashboard" element={<PartnerDashboard />} />
+      <Route path="/dashboard" element={<PartnerDashboard />} />
+=======
       <Route path="/services" element={<ServicesPage />} />
 
       {/* Auth Routes */}
@@ -53,6 +83,7 @@ const AppRoutes: React.FC = () => {
           </PartnerAuthGuard>
         } 
       />
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,4 +1,163 @@
 import React from 'react';
+<<<<<<< HEAD
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
+
+// Mock Firebase Auth - Define mocks first
+const mockSignInWithPopup = jest.fn();
+const mockOnAuthStateChanged = jest.fn();
+const mockSignOut = jest.fn();
+
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(() => ({
+    onAuthStateChanged: mockOnAuthStateChanged,
+    signOut: mockSignOut
+  })),
+  signInWithPopup: mockSignInWithPopup,
+  GoogleAuthProvider: jest.fn(() => ({
+    addScope: jest.fn(),
+    setCustomParameters: jest.fn()
+  }))
+}));
+
+// Mock react-router-dom
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+  useLocation: () => ({ pathname: '/login' })
+}));
+
+// Mock components to avoid CSS imports
+jest.mock('../../src/components/Navbar', () => {
+  return function MockNavbar() {
+    return <div data-testid="navbar">Navigation</div>;
+  };
+});
+
+jest.mock('../../src/components/Footer', () => {
+  return function MockFooter() {
+    return <div data-testid="footer">Footer</div>;
+  };
+});
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+};
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
+});
+
+// Mock fetch for API calls
+beforeAll(() => {
+  global.fetch = jest.fn((input: string | URL | Request, init?: RequestInit) => {
+    let url = '';
+    if (typeof input === 'string') url = input;
+    else if (input instanceof URL) url = input.toString();
+    else if (input instanceof Request && typeof input.url === 'string') url = input.url;
+    
+    if (url.includes('/api/auth/login')) {
+      const body = init && init.body ? JSON.parse(init.body as string) : {};
+      if (body.email === 'admin@test.com' && body.password === 'adminpass') {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve({ 
+            token: 'mock-jwt-token',
+            user: { email: 'admin@test.com', role: 'admin' }
+          })
+        } as unknown as Response);
+      }
+      return Promise.resolve({
+        ok: false,
+        status: 401,
+        json: () => Promise.resolve({ error: 'Invalid credentials' })
+      } as unknown as Response);
+    }
+    return Promise.resolve({
+      ok: false,
+      status: 404,
+      json: () => Promise.resolve({ error: 'Not found' })
+    } as unknown as Response);
+  }) as typeof fetch;
+});
+
+beforeEach(() => {
+  // Reset mocks
+  jest.clearAllMocks();
+  localStorageMock.getItem.mockReturnValue(null);
+  mockOnAuthStateChanged.mockImplementation((callback) => {
+    callback(null); // No user initially
+    return jest.fn(); // Return unsubscribe function
+  });
+});
+
+afterAll(() => {
+  if (global.fetch && 'mockClear' in global.fetch) {
+    // @ts-ignore
+    global.fetch.mockClear();
+  }
+  global.fetch = jest.fn();
+});
+
+describe('Authentication Flow', () => {
+  it('renders a simple login form', () => {
+    const TestLoginForm = () => (
+      <div>
+        <h2>Welcome Back</h2>
+        <form>
+          <label htmlFor="email">Email Address</label>
+          <input id="email" type="email" placeholder="Enter your email" />
+          <label htmlFor="password">Password</label>
+          <input id="password" type="password" placeholder="Enter your password" />
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+    );
+
+    render(<TestLoginForm />);
+
+    // Check for form elements
+    expect(screen.getByText('Welcome Back')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();
+  });
+
+  it('handles form input changes', () => {
+    const TestLoginForm = () => {
+      const [email, setEmail] = React.useState('');
+      const [password, setPassword] = React.useState('');
+
+      return (
+        <div>
+          <h2>Welcome Back</h2>
+          <form>
+            <label htmlFor="email">Email Address</label>
+            <input 
+              id="email" 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email" 
+            />
+            <label htmlFor="password">Password</label>
+            <input 
+              id="password" 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password" 
+            />
+            <button type="submit">Sign In</button>
+          </form>
+=======
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
@@ -69,10 +228,35 @@ describe('Accessibility Tests', () => {
               {item}
             </div>
           ))}
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         </div>
       );
     };
 
+<<<<<<< HEAD
+    render(<TestLoginForm />);
+
+    const emailInput = screen.getByPlaceholderText('Enter your email');
+    const passwordInput = screen.getByPlaceholderText('Enter your password');
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+
+    expect(emailInput).toHaveValue('test@example.com');
+    expect(passwordInput).toHaveValue('password123');
+  });
+
+  it('handles form submission', async () => {
+    const mockSubmit = jest.fn();
+    
+    const TestLoginForm = () => {
+      const [email, setEmail] = React.useState('');
+      const [password, setPassword] = React.useState('');
+
+      const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        mockSubmit({ email, password });
+=======
     render(<KeyboardList />);
 
     const listbox = screen.getByRole('listbox');
@@ -288,10 +472,33 @@ describe('Accessibility Tests', () => {
 
       const makeAnnouncement = () => {
         setAnnouncement('Action completed successfully!');
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       };
 
       return (
         <div>
+<<<<<<< HEAD
+          <h2>Welcome Back</h2>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">Email Address</label>
+            <input 
+              id="email" 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email" 
+            />
+            <label htmlFor="password">Password</label>
+            <input 
+              id="password" 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password" 
+            />
+            <button type="submit">Sign In</button>
+          </form>
+=======
           <button onClick={makeAnnouncement} data-testid="announce-button">
             Complete Action
           </button>
@@ -302,10 +509,29 @@ describe('Accessibility Tests', () => {
           >
             {announcement}
           </div>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         </div>
       );
     };
 
+<<<<<<< HEAD
+    render(<TestLoginForm />);
+
+    const emailInput = screen.getByPlaceholderText('Enter your email');
+    const passwordInput = screen.getByPlaceholderText('Enter your password');
+    const submitButton = screen.getByRole('button', { name: 'Sign In' });
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+    fireEvent.click(submitButton);
+
+    expect(mockSubmit).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password123'
+    });
+  });
+});
+=======
     render(<LiveRegion />);
 
     const liveRegion = screen.getByTestId('live-region');
@@ -319,3 +545,4 @@ describe('Accessibility Tests', () => {
     expect(liveRegion).toHaveTextContent('Action completed successfully!');
   });
 }); 
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86

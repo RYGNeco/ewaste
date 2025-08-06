@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
+<<<<<<< HEAD
+=======
 import { getNavigationItemsForRole, NavigationItem } from '../../config/adminNavigation';
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -14,7 +17,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(isMobile);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userData, setUserData] = useState<any>(null);
+<<<<<<< HEAD
+=======
   const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,6 +28,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
     // Get user data from localStorage
     const storedUserData = localStorage.getItem('userData');
     if (storedUserData) {
+<<<<<<< HEAD
+      setUserData(JSON.parse(storedUserData));
+=======
       const parsedUserData = JSON.parse(storedUserData);
       setUserData(parsedUserData);
       
@@ -29,6 +38,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
       const userRole = parsedUserData?.role;
       const items = getNavigationItemsForRole(userRole);
       setNavigationItems(items);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     }
   }, []);
 
@@ -59,6 +69,65 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+<<<<<<< HEAD
+  const navItems = [
+    {
+      title: 'Dashboard',
+      path: '#dashboard',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Inventory',
+      path: '#inventory',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Track Batches',
+      path: '#batches',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Employee Management',
+      path: '#employees',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Partner Management',
+      path: '#partners',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Settings',
+      path: '#settings',
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+  ];
+=======
   const handleNavClick = (section: string) => {
     if (onNavigate) {
       onNavigate(section);
@@ -67,6 +136,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
       setIsMobileMenuOpen(false);
     }
   };
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -129,6 +199,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
         )}
         <nav className={`${isMobile ? 'mt-4' : 'mt-6'} px-2 flex flex-col h-full`}>
           <div className="flex-1">
+<<<<<<< HEAD
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => isMobile && setIsMobileMenuOpen(false)}
+                  className={`flex items-center px-4 py-3 mb-2 rounded-lg transition-colors duration-200 ${
+=======
             {navigationItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -136,6 +216,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
                   key={item.path}
                   onClick={() => handleNavClick(item.section)}
                   className={`w-full flex items-center px-4 py-3 mb-2 rounded-lg transition-colors duration-200 ${
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                     isActive
                       ? 'bg-green-50 text-green-700'
                       : 'text-gray-600 hover:bg-gray-100'
@@ -145,7 +226,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
                   {(!isNavCollapsed || isMobile) && (
                     <span className="ml-3 font-medium">{item.title}</span>
                   )}
+<<<<<<< HEAD
+                </Link>
+=======
                 </button>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
               );
             })}
           </div>

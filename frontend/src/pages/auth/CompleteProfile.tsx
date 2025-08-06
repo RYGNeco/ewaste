@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
+import { useNavigate, useLocation } from 'react-router-dom';
+import { FaUser, FaBuilding, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIndustry, FaUsers, FaGlobe } from 'react-icons/fa';
+import AuthService, { ProfileCompletionData } from '../../services/AuthService';
+
+const CompleteProfile: React.FC = () => {
+  const [userType, setUserType] = useState<'employee' | 'partner'>('employee');
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [isNewUser, setIsNewUser] = useState(false);
+=======
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaBuilding, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIndustry, FaUsers, FaGlobe } from 'react-icons/fa';
 
 const CompleteProfile: React.FC = () => {
   const [userType, setUserType] = useState<'employee' | 'partner'>('employee');
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -27,6 +38,10 @@ const CompleteProfile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+<<<<<<< HEAD
+  const location = useLocation();
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   const employeeRoles = [
     { value: 'admin', label: 'Admin' },
@@ -35,6 +50,26 @@ const CompleteProfile: React.FC = () => {
     { value: 'coordinator', label: 'Coordinator' }
   ];
 
+<<<<<<< HEAD
+  // Handle data from Google Auth flow
+  useEffect(() => {
+    const state = location.state as any;
+    if (state?.user) {
+      setUserInfo(state.user);
+      setIsNewUser(state.isNewUser || false);
+      
+      // Pre-fill form with Google data
+      const names = state.user.name?.split(' ') || [];
+      setFormData(prev => ({
+        ...prev,
+        firstName: names[0] || '',
+        lastName: names.slice(1).join(' ') || ''
+      }));
+    }
+  }, [location.state]);
+
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const businessTypes = [
     'Corporation',
     'LLC',
@@ -108,12 +143,23 @@ const CompleteProfile: React.FC = () => {
     setIsLoading(true);
 
     try {
+<<<<<<< HEAD
+      const profileData: ProfileCompletionData = {
+=======
       const payload = {
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         userType,
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
         ...(userType === 'employee' && {
+<<<<<<< HEAD
+          requestedRoles: formData.requestedRoles
+        }),
+        ...(userType === 'partner' && {
+          organization: formData.organizationName,
+          businessType: formData.businessType,
+=======
           requestedRoles: formData.requestedRoles,
           requestReason: formData.requestReason
         }),
@@ -125,6 +171,7 @@ const CompleteProfile: React.FC = () => {
             employeeCount: parseInt(formData.employeeCount) || 0,
             website: formData.website
           },
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
           address: {
             street: formData.street,
             city: formData.city,
@@ -135,6 +182,29 @@ const CompleteProfile: React.FC = () => {
         })
       };
 
+<<<<<<< HEAD
+      // Use AuthService to complete profile
+      const updatedUser = await AuthService.completeProfile(profileData);
+
+      console.log('✅ Profile completed successfully:', updatedUser);
+
+      // Redirect based on user type and status
+      if (updatedUser.userType === 'employee') {
+        if (updatedUser.roleApprovalStatus === 'pending') {
+          navigate('/pending-approval');
+        } else {
+          navigate('/employee-dashboard');
+        }
+      } else if (updatedUser.userType === 'partner') {
+        navigate('/partner-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+
+    } catch (error) {
+      console.error('❌ Profile completion failed:', error);
+      setError(error instanceof Error ? error.message : 'Failed to complete profile');
+=======
       const response = await fetch('/api/auth/complete-profile', {
         method: 'POST',
         headers: {
@@ -175,6 +245,7 @@ const CompleteProfile: React.FC = () => {
     } catch (error) {
       console.error('Complete profile error:', error);
       setError('Failed to complete profile. Please try again.');
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     } finally {
       setIsLoading(false);
     }

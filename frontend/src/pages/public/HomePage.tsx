@@ -135,7 +135,11 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+<<<<<<< HEAD
+      <Navbar />
+=======
       
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       
       <div className="pt-16 pb-16">
         {/* Hero Section */}
@@ -377,7 +381,11 @@ const HomePage: React.FC = () => {
         </section>
       </div>
 
+<<<<<<< HEAD
+      <Footer />
+=======
       
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     </div>
   );
 };
