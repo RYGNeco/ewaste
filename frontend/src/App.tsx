@@ -1,15 +1,5 @@
 import AppRoutes from './routes';
 import React from "react";
-<<<<<<< HEAD
-
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <AppRoutes />
-    </div>
-  );
-};
-=======
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { useLocation } from 'react-router-dom';
@@ -37,5 +27,4 @@ const App: React.FC = () => {
   );
 };
 
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 export default App;
