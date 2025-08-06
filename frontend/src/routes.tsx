@@ -7,13 +7,15 @@ import CompleteProfile from './pages/auth/CompleteProfile';
 import PendingApproval from './pages/auth/PendingApproval';
 import RoleRejected from './pages/auth/RoleRejected';
 import AdminPage from './pages/admin/AdminPage';
-import PartnerDashboard from './pages/partner/PartnerDashboard';
+import PartnerPage from './pages/partner/PartnerPage';
+import PartnerAuthGuard from './components/partner/PartnerAuthGuard';
 import AboutUsPage from './pages/public/AboutUsPage';
 import ContactPage from './pages/public/ContactPage';
 import HowItWorksPage from './pages/public/HowItWorksPage';
 import EducationPage from './pages/public/EducationPage';
 import JoinUsPage from './pages/public/JoinUsPage';
 import ServicesPage from './pages/public/ServicePage'; 
+
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -35,8 +37,22 @@ const AppRoutes: React.FC = () => {
       
       {/* Protected Routes */}
       <Route path="/admin/*" element={<AdminPage />} />
-      <Route path="/partner-dashboard" element={<PartnerDashboard />} />
-      <Route path="/dashboard" element={<PartnerDashboard />} />
+      <Route 
+        path="/partner/*" 
+        element={
+          <PartnerAuthGuard>
+            <PartnerPage />
+          </PartnerAuthGuard>
+        } 
+      />
+      <Route 
+        path="/dashboard" 
+        element={
+          <PartnerAuthGuard>
+            <PartnerPage />
+          </PartnerAuthGuard>
+        } 
+      />
       
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

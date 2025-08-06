@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
-import { FaSignOutAlt, FaUser } from 'react-icons/fa';
-import { getNavigationItemsForRole, NavigationItem } from '../../config/adminNavigation';
+import { FaSignOutAlt, FaUser, FaBell } from 'react-icons/fa';
+import { getPartnerNavigationItemsForRole, PartnerNavigationItem } from '../../config/partnerNavigation';
 
-interface AdminLayoutProps {
+interface PartnerLayoutProps {
   children: React.ReactNode;
   onNavigate?: (section: string) => void;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
+const PartnerLayout: React.FC<PartnerLayoutProps> = ({ children, onNavigate }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isNavCollapsed, setIsNavCollapsed] = useState(isMobile);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userData, setUserData] = useState<any>(null);
-  const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
+  const [navigationItems, setNavigationItems] = useState<PartnerNavigationItem[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
       
       // Get navigation items based on user role
       const userRole = parsedUserData?.role;
-      const items = getNavigationItemsForRole(userRole);
+      const items = getPartnerNavigationItemsForRole(userRole);
       setNavigationItems(items);
     }
   }, []);
@@ -90,7 +90,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
             />
           </svg>
         </button>
-        <span className="text-lg font-semibold text-green-700 ml-4">Rygneco Admin</span>
+        <span className="text-lg font-semibold text-green-700 ml-4">Partner Portal</span>
       </div>
 
       {/* Sidebar */}
@@ -105,7 +105,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
         {!isMobile && (
           <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200">
             {!isNavCollapsed && (
-              <span className="text-lg font-semibold text-green-700">Rygneco Admin</span>
+              <span className="text-lg font-semibold text-green-700">Partner Portal</span>
             )}
             <button
               onClick={() => setIsNavCollapsed(!isNavCollapsed)}
@@ -159,10 +159,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
                     <FaUser className="text-gray-500 text-sm" />
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-700 truncate">
-                        {userData?.firstName || userData?.name || 'User'}
+                        {userData?.companyName || userData?.firstName || 'Partner'}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {userData?.role?.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Employee'}
+                        {userData?.role?.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Partner'}
                       </div>
                     </div>
                   </div>
@@ -198,39 +198,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
         >
           {/* Notifications */}
           <button className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none relative">
-            <svg
-              className="w-6 h-6 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
+            <FaBell className="w-6 h-6 text-gray-600" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
 
-          {/* Admin Profile and Logout */}
+          {/* Partner Profile and Logout */}
           <div className="flex items-center gap-3">
             {/* User Info */}
             <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hidden md:flex">
               <FaUser className="text-gray-500 text-sm" />
               <span className="text-sm font-medium text-gray-700">
-                {userData?.firstName || userData?.name || 'User'}
+                {userData?.companyName || userData?.firstName || 'Partner'}
               </span>
               <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
-                {userData?.role?.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Employee'}
+                {userData?.role?.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Partner'}
               </span>
             </div>
             
             {/* Profile Avatar */}
             <button className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-medium focus:outline-none hover:bg-green-200 transition-colors">
-              {userData?.firstName?.charAt(0) || userData?.name?.charAt(0) || 'U'}
-              {userData?.lastName?.charAt(0) || ''}
+              {userData?.companyName?.charAt(0) || userData?.firstName?.charAt(0) || 'P'}
             </button>
             
             {/* Logout Button */}
@@ -262,4 +249,4 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
   );
 };
 
-export default AdminLayout;
+export default PartnerLayout; 
