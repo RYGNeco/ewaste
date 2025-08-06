@@ -1,10 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose';
+<<<<<<< HEAD
 import { UserType, UserRole, ApprovalStatus, UserStatus, RegistrationMethod } from '../types/user.types';
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 export interface IUser extends Document {
   googleId?: string;
   name: string;
   email: string;
+<<<<<<< HEAD
   password?: string;
   firstName?: string;
   lastName?: string;
@@ -21,11 +25,22 @@ export interface IUser extends Document {
   profileCompleted: boolean;
   isActive: boolean;
   registrationMethod: RegistrationMethod;
+=======
+  firstName?: string;
+  lastName?: string;
+  userType: 'employee' | 'partner' | 'super_admin';
+  role: string;
+  requestedRoles: string[];
+  roleApprovalStatus: 'pending' | 'approved' | 'rejected';
+  approvedRoles: string[];
+  status: 'active' | 'inactive' | 'pending';
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   createdAt: Date;
   updatedAt: Date;
   approvedBy?: string;
   approvedAt?: Date;
   rejectionReason?: string;
+<<<<<<< HEAD
 
   // 2FA fields
   twoFactorEnabled: boolean;
@@ -76,6 +91,40 @@ const userSchema = new Schema<IUser>({
   roleApprovalStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'] as ApprovalStatus[],
+=======
+}
+
+const userSchema = new Schema<IUser>({
+  googleId: { type: String, unique: true, sparse: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  firstName: { type: String },
+  lastName: { type: String },
+  userType: { 
+    type: String, 
+    enum: ['employee', 'partner', 'super_admin'], 
+    required: true 
+  },
+  role: { 
+    type: String, 
+    default: 'employee',
+    enum: [
+      'super_admin',
+      'admin', 
+      'inventory_manager', 
+      'transporter', 
+      'coordinator',
+      'partner'
+    ]
+  },
+  requestedRoles: [{
+    type: String,
+    enum: ['admin', 'inventory_manager', 'transporter', 'coordinator', 'super_admin']
+  }],
+  roleApprovalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     default: 'pending'
   },
   approvedRoles: [{
@@ -87,6 +136,7 @@ const userSchema = new Schema<IUser>({
     enum: ['active', 'inactive', 'pending'],
     default: 'pending'
   },
+<<<<<<< HEAD
   accountStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
@@ -118,6 +168,11 @@ const userSchema = new Schema<IUser>({
     question: { type: String },
     answer: { type: String }
   }]
+=======
+  approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  approvedAt: { type: Date },
+  rejectionReason: { type: String }
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 }, {
   timestamps: true
 });

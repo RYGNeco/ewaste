@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaUser, FaBuilding, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIndustry, FaUsers, FaGlobe } from 'react-icons/fa';
 import AuthService, { ProfileCompletionData } from '../../services/AuthService';
@@ -7,6 +8,13 @@ const CompleteProfile: React.FC = () => {
   const [userType, setUserType] = useState<'employee' | 'partner'>('employee');
   const [userInfo, setUserInfo] = useState<any>(null);
   const [isNewUser, setIsNewUser] = useState(false);
+=======
+import { useNavigate } from 'react-router-dom';
+import { FaUser, FaBuilding, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIndustry, FaUsers, FaGlobe } from 'react-icons/fa';
+
+const CompleteProfile: React.FC = () => {
+  const [userType, setUserType] = useState<'employee' | 'partner'>('employee');
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,7 +38,10 @@ const CompleteProfile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+<<<<<<< HEAD
   const location = useLocation();
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   const employeeRoles = [
     { value: 'admin', label: 'Admin' },
@@ -39,6 +50,7 @@ const CompleteProfile: React.FC = () => {
     { value: 'coordinator', label: 'Coordinator' }
   ];
 
+<<<<<<< HEAD
   // Handle data from Google Auth flow
   useEffect(() => {
     const state = location.state as any;
@@ -56,6 +68,8 @@ const CompleteProfile: React.FC = () => {
     }
   }, [location.state]);
 
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const businessTypes = [
     'Corporation',
     'LLC',
@@ -129,17 +143,35 @@ const CompleteProfile: React.FC = () => {
     setIsLoading(true);
 
     try {
+<<<<<<< HEAD
       const profileData: ProfileCompletionData = {
+=======
+      const payload = {
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         userType,
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
         ...(userType === 'employee' && {
+<<<<<<< HEAD
           requestedRoles: formData.requestedRoles
         }),
         ...(userType === 'partner' && {
           organization: formData.organizationName,
           businessType: formData.businessType,
+=======
+          requestedRoles: formData.requestedRoles,
+          requestReason: formData.requestReason
+        }),
+        ...(userType === 'partner' && {
+          organizationName: formData.organizationName,
+          businessInfo: {
+            businessType: formData.businessType,
+            industry: formData.industry,
+            employeeCount: parseInt(formData.employeeCount) || 0,
+            website: formData.website
+          },
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
           address: {
             street: formData.street,
             city: formData.city,
@@ -150,6 +182,7 @@ const CompleteProfile: React.FC = () => {
         })
       };
 
+<<<<<<< HEAD
       // Use AuthService to complete profile
       const updatedUser = await AuthService.completeProfile(profileData);
 
@@ -171,6 +204,48 @@ const CompleteProfile: React.FC = () => {
     } catch (error) {
       console.error('❌ Profile completion failed:', error);
       setError(error instanceof Error ? error.message : 'Failed to complete profile');
+=======
+      const response = await fetch('/api/auth/complete-profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store user data in localStorage
+        localStorage.setItem('userType', userType);
+        localStorage.setItem('userData', JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          userType,
+          ...(userType === 'employee' && {
+            requestedRoles: formData.requestedRoles,
+            roleApprovalStatus: 'pending'
+          }),
+          ...(userType === 'partner' && {
+            organizationName: formData.organizationName,
+            status: 'active'
+          })
+        }));
+
+        // Redirect based on user type
+        if (userType === 'employee') {
+          navigate('/pending-approval');
+        } else {
+          navigate('/partner-dashboard');
+        }
+      } else {
+        setError(data.error || 'Failed to complete profile');
+      }
+    } catch (error) {
+      console.error('Complete profile error:', error);
+      setError('Failed to complete profile. Please try again.');
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     } finally {
       setIsLoading(false);
     }

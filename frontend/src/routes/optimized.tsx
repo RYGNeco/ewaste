@@ -16,6 +16,10 @@ const JoinUsPage = lazy(() => import('../pages/public/JoinUsPage'));
 const Login = lazy(() => import('../pages/auth/Login'));
 const Register = lazy(() => import('../pages/auth/Register'));
 const CompleteProfile = lazy(() => import('../pages/auth/CompleteProfile'));
+<<<<<<< HEAD
+=======
+const PendingApproval = lazy(() => import('../pages/auth/PendingApproval'));
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 const RoleRejected = lazy(() => import('../pages/auth/RoleRejected'));
 
 // Admin pages - these can be further split by features
@@ -120,6 +124,17 @@ const AppRoutes: React.FC = () => {
         } 
       />
       <Route 
+<<<<<<< HEAD
+=======
+        path="/pending-approval" 
+        element={
+          <RouteWrapper>
+            <PendingApproval />
+          </RouteWrapper>
+        } 
+      />
+      <Route 
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         path="/role-rejected" 
         element={
           <RouteWrapper>

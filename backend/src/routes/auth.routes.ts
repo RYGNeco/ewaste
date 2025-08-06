@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from 'express';
 import {
   googleSignIn,
@@ -26,3 +27,7 @@ router.post('/reject-account/:userId', authenticateToken, rejectUserAccount);
 router.get('/approval-status', authenticateToken, getApprovalStatus);
 
 export default router;
+=======
+export {};
+
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86

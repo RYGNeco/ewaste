@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import mongoose from 'mongoose';
 import { logger } from '../utils/logger';
 
@@ -28,3 +29,7 @@ export const connectDatabase = async (): Promise<void> => {
     process.exit(1);
   }
 };
+=======
+// This file will be implemented in the future
+export {};
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout';
+<<<<<<< HEAD
 import RoleRequestManagement from '../../components/admin/RoleRequestManagement';
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 import { 
   FaRecycle, 
   FaUsers, 
@@ -37,6 +40,10 @@ import {
 import { getAuth, signOut, User } from 'firebase/auth';
 import '../../firebase';
 import api from '../../utils/api';
+<<<<<<< HEAD
+=======
+import { getActiveTabFromPath, hasAccessToSection } from '../../config/adminNavigation';
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 const AdminPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -85,6 +92,25 @@ const AdminPage: React.FC = () => {
     }
   }, [navigate]);
 
+<<<<<<< HEAD
+=======
+  // Handle navigation from sidebar
+  const handleNavigation = (section: string) => {
+    // Check if user has access to this section
+    if (!hasAccessToSection(section, userRole || undefined)) {
+      console.warn(`User does not have access to section: ${section}`);
+      return;
+    }
+    setActiveTab(section);
+  };
+
+  // Set active tab based on URL path using shared configuration
+  useEffect(() => {
+    const activeTab = getActiveTabFromPath(location.pathname);
+    setActiveTab(activeTab);
+  }, [location.pathname]);
+
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 // API Functions
 const fetchPendingRoleRequests = async () => {
   try {
@@ -1007,6 +1033,7 @@ useEffect(() => {
   }
 
   return (
+<<<<<<< HEAD
     <AdminLayout>
       {/* Tab Navigation */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
@@ -1090,13 +1117,20 @@ useEffect(() => {
         </div>
       </div>
 
+=======
+    <AdminLayout onNavigate={handleNavigation}>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       {/* Content Area */}
       <div className="space-y-6">
         {activeTab === 'dashboard' && <Dashboard />}
         {activeTab === 'batches' && <Batches />}
         {activeTab === 'partners' && <Partners />}
         {activeTab === 'employees' && <EmployeeManagement />}
+<<<<<<< HEAD
         {activeTab === 'approvals' && <RoleRequestManagement />}
+=======
+        {activeTab === 'approvals' && <RoleApprovals />}
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
         {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'settings' && <Settings />}
       </div>

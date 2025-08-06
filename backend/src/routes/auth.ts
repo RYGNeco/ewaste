@@ -5,6 +5,7 @@ import {
   completeProfile,
   getCurrentUser,
   logout,
+<<<<<<< HEAD
   login,
   googleSignIn,
   completeProfileNew,
@@ -16,12 +17,19 @@ import {
   approveUserAccount,
   rejectUserAccount,
   getApprovalStatus
+=======
+  login
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
 
 const router = express.Router();
 
+<<<<<<< HEAD
 // Google OAuth routes (legacy)
+=======
+// Google OAuth routes
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
@@ -31,6 +39,7 @@ router.get('/google/callback',
   oauthCallback
 );
 
+<<<<<<< HEAD
 // New Firebase Google Auth endpoint
 router.post('/google-signin', googleSignIn);
 
@@ -43,6 +52,10 @@ router.post('/complete-profile-new', authenticateToken, completeProfileNew); // 
 
 // Profile status check
 router.get('/profile-status', authenticateToken, getProfileStatus);
+=======
+// Profile completion after Google OAuth
+router.post('/complete-profile', completeProfile);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 // Get current user info
 router.get('/me', authenticateToken, getCurrentUser);
@@ -53,6 +66,7 @@ router.post('/logout', logout);
 // Legacy login (for non-Google auth)
 router.post('/login', login);
 
+<<<<<<< HEAD
 // Registration endpoints
 router.post('/register', manualRegister);
 router.post('/manual-register', manualRegister);
@@ -66,4 +80,6 @@ router.post('/reject-user/:userId', authenticateToken, rejectUserAccount);
 // Check approval status
 router.get('/approval-status', authenticateToken, getApprovalStatus);
 
+=======
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 export default router;

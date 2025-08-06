@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
+<<<<<<< HEAD
+=======
+import { getNavigationItemsForRole, NavigationItem } from '../../config/adminNavigation';
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -13,6 +17,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(isMobile);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userData, setUserData] = useState<any>(null);
+<<<<<<< HEAD
+=======
+  const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([]);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -20,7 +28,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
     // Get user data from localStorage
     const storedUserData = localStorage.getItem('userData');
     if (storedUserData) {
+<<<<<<< HEAD
       setUserData(JSON.parse(storedUserData));
+=======
+      const parsedUserData = JSON.parse(storedUserData);
+      setUserData(parsedUserData);
+      
+      // Get navigation items based on user role
+      const userRole = parsedUserData?.role;
+      const items = getNavigationItemsForRole(userRole);
+      setNavigationItems(items);
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     }
   }, []);
 
@@ -51,6 +69,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+<<<<<<< HEAD
   const navItems = [
     {
       title: 'Dashboard',
@@ -108,6 +127,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
       ),
     },
   ];
+=======
+  const handleNavClick = (section: string) => {
+    if (onNavigate) {
+      onNavigate(section);
+    }
+    if (isMobile) {
+      setIsMobileMenuOpen(false);
+    }
+  };
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -170,6 +199,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
         )}
         <nav className={`${isMobile ? 'mt-4' : 'mt-6'} px-2 flex flex-col h-full`}>
           <div className="flex-1">
+<<<<<<< HEAD
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -178,6 +208,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
                   to={item.path}
                   onClick={() => isMobile && setIsMobileMenuOpen(false)}
                   className={`flex items-center px-4 py-3 mb-2 rounded-lg transition-colors duration-200 ${
+=======
+            {navigationItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavClick(item.section)}
+                  className={`w-full flex items-center px-4 py-3 mb-2 rounded-lg transition-colors duration-200 ${
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                     isActive
                       ? 'bg-green-50 text-green-700'
                       : 'text-gray-600 hover:bg-gray-100'
@@ -187,7 +226,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onNavigate }) => {
                   {(!isNavCollapsed || isMobile) && (
                     <span className="ml-3 font-medium">{item.title}</span>
                   )}
+<<<<<<< HEAD
                 </Link>
+=======
+                </button>
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
               );
             })}
           </div>

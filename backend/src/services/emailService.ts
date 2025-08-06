@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import nodemailer from 'nodemailer';
 import path from 'path';
 import fs from 'fs';
@@ -155,3 +156,7 @@ export class EmailService {
 export const sendEmail = (options: EmailOptions): Promise<void> => {
   return EmailService.sendEmail(options);
 };
+=======
+// This file will be implemented in the future
+export {};
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86

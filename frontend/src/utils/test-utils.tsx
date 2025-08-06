@@ -4,13 +4,29 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
+<<<<<<< HEAD
 import { authSlice } from '../../store/slices/authSlice';
+=======
+
+// Mock auth slice since the import is causing issues
+const mockAuthSlice = {
+  reducer: (state = {}, action: any) => state,
+  actions: {
+    setUser: (user: any) => ({ type: 'auth/setUser', payload: user }),
+    logout: () => ({ type: 'auth/logout' }),
+  },
+};
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 // Mock setup utilities
 export const createMockStore = (initialState = {}) => {
   return configureStore({
     reducer: {
+<<<<<<< HEAD
       auth: authSlice.reducer,
+=======
+      auth: mockAuthSlice.reducer,
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     },
     preloadedState: initialState,
   });
@@ -123,14 +139,22 @@ export const setupTests = () => {
     observe: jest.fn(),
     unobserve: jest.fn(),
     disconnect: jest.fn(),
+<<<<<<< HEAD
   }));
+=======
+  })) as any;
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   // Mock ResizeObserver
   global.ResizeObserver = jest.fn().mockImplementation(() => ({
     observe: jest.fn(),
     unobserve: jest.fn(),
     disconnect: jest.fn(),
+<<<<<<< HEAD
   }));
+=======
+  })) as any;
+>>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 };
 
 export const cleanupTests = () => {
