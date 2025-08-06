@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Approved - Rygneco E-Waste Tracker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 30px; }
+        .success-icon { font-size: 48px; text-align: center; margin: 20px 0; }
+        .login-button { text-align: center; margin: 30px 0; }
+        .btn { display: inline-block; padding: 15px 40px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .features { background: #f8f9fa; padding: 20px; border-radius: 6px; margin: 20px 0; }
+        .feature-item { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Account Approved!</h1>
+            <p>Welcome to Rygneco E-Waste Tracker</p>
+        </div>
+        
+        <div class="content">
+            <div class="success-icon">✅</div>
+            
+            <h2>Great news, {{firstName}}!</h2>
+            <p>Your account request has been approved by our administrators. You now have full access to the Rygneco E-Waste Tracker platform.</p>
+            
+            <div class="features">
+                <h3>🚀 What you can do now:</h3>
+                <div class="feature-item">✓ Access your personalized dashboard</div>
+                <div class="feature-item">✓ Track and manage e-waste inventory</div>
+                <div class="feature-item">✓ Collaborate with team members</div>
+                <div class="feature-item">✓ Generate detailed reports</div>
+                <div class="feature-item">✓ Set up Two-Factor Authentication for enhanced security</div>
+            </div>
+
+            <p><strong>Your Account Details:</strong></p>
+            <ul>
+                <li><strong>Email:</strong> {{email}}</li>
+                <li><strong>Role:</strong> {{role}}</li>
+                <li><strong>User Type:</strong> {{userType}}</li>
+                <li><strong>Approved By:</strong> {{approvedBy}}</li>
+                <li><strong>Approval Date:</strong> {{approvalDate}}</li>
+            </ul>
+            
+            <div class="login-button">
+                <a href="{{loginUrl}}" class="btn">🔐 Login to Dashboard</a>
+            </div>
+
+            <p><strong>Security Tip:</strong> We recommend enabling Two-Factor Authentication (2FA) from your security settings for enhanced account protection.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Rygneco E-Waste Tracker | Welcome to our platform!</p>
+            <p>If you have any questions, please contact our support team.</p>
+        </div>
+    </div>
+</body>
+</html>

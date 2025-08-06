@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Account Request - Rygneco E-Waste Tracker</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 30px; }
+        .user-info { background: #f8f9fa; padding: 20px; border-radius: 6px; margin: 20px 0; }
+        .info-row { display: flex; justify-content: space-between; margin: 10px 0; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .info-label { font-weight: bold; color: #555; }
+        .info-value { color: #333; }
+        .action-buttons { text-align: center; margin: 30px 0; }
+        .btn { display: inline-block; padding: 12px 30px; margin: 0 10px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .btn-approve { background: #4CAF50; color: white; }
+        .btn-reject { background: #f44336; color: white; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .priority-badge { background: #ff6b35; color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔔 New Account Request</h1>
+            <p>A new user has requested access to Rygneco E-Waste Tracker</p>
+            <span class="priority-badge">REQUIRES APPROVAL</span>
+        </div>
+        
+        <div class="content">
+            <h2>User Details</h2>
+            <div class="user-info">
+                <div class="info-row">
+                    <span class="info-label">Full Name:</span>
+                    <span class="info-value">{{firstName}} {{lastName}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{email}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Requested Role:</span>
+                    <span class="info-value">{{requestedRole}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">User Type:</span>
+                    <span class="info-value">{{userType}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Registration Method:</span>
+                    <span class="info-value">{{registrationMethod}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Organization:</span>
+                    <span class="info-value">{{organization}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Request Date:</span>
+                    <span class="info-value">{{requestDate}}</span>
+                </div>
+            </div>
+
+            <p><strong>⏰ Action Required:</strong> Please review this account request and approve or reject the user's access to the system.</p>
+            
+            <div class="action-buttons">
+                <a href="{{approveUrl}}" class="btn btn-approve">✅ Approve Account</a>
+                <a href="{{rejectUrl}}" class="btn btn-reject">❌ Reject Account</a>
+            </div>
+
+            <p><strong>Note:</strong> You can also manage account requests from the Super Admin Dashboard.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Rygneco E-Waste Tracker | This is an automated notification</p>
+            <p>If you did not expect this email, please contact the development team.</p>
+        </div>
+    </div>
+</body>
+</html>

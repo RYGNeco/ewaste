@@ -1,0 +1,17 @@
+/* Placeholder eco-friendly illustration for homepage hero section */
+<svg width="350" height="220" viewBox="0 0 350 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="350" height="220" rx="30" fill="#e8f5e9"/>
+  <g>
+    <ellipse cx="175" cy="180" rx="120" ry="25" fill="#c8e6c9"/>
+    <rect x="90" y="110" width="60" height="40" rx="8" fill="#81c784"/>
+    <rect x="200" y="100" width="50" height="50" rx="10" fill="#388e3c"/>
+    <rect x="160" y="130" width="30" height="30" rx="6" fill="#66bb6a"/>
+    <circle cx="110" cy="120" r="8" fill="#fff"/>
+    <circle cx="220" cy="120" r="8" fill="#fff"/>
+    <rect x="120" y="150" width="40" height="10" rx="3" fill="#43a047"/>
+    <rect x="210" y="150" width="30" height="10" rx="3" fill="#43a047"/>
+    <path d="M60 170 Q90 140 120 170" stroke="#388e3c" stroke-width="4" fill="none"/>
+    <path d="M230 170 Q260 140 290 170" stroke="#388e3c" stroke-width="4" fill="none"/>
+    <text x="175" y="60" text-anchor="middle" font-size="22" fill="#228b22" font-family="Segoe UI, Arial">Recycle for Tomorrow</text>
+  </g>
+</svg>

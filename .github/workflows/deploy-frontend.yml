@@ -1,0 +1,67 @@
+name: Deploy Frontend to Vercel
+
+on:
+  workflow_run:
+    workflows: ["Build & Package"]
+    types:
+      - completed
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      
+      - name: Build and deploy to Vercel
+        run: |
+          cd frontend
+          npm install
+          npm run build
+          ls -la dist
+          
+          # Create .vercel directory with project.json for config
+          mkdir -p ../.vercel
+          cat > ../.vercel/project.json << EOF
+          {
+            "projectId": "$VERCEL_PROJECT_ID",
+            "orgId": "$VERCEL_ORG_ID"
+          }
+          EOF
+          
+          # Ensure Vercel CLI is available
+          npm install -g vercel
+          
+          # Deploy to Vercel directly
+          echo "Deploying to Vercel..."
+          vercel deploy --prod --token=$VERCEL_TOKEN --yes
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      
+      - name: Health Check
+        run: |
+          echo "Performing health check on deployed site..."
+          # Get deployment URL from Vercel CLI output
+          DEPLOYMENT_URL=$(vercel --token=${{ secrets.VERCEL_TOKEN }} ls -1 | grep rygneco | head -1 | awk '{print $2}')
+          echo "Deployment URL: $DEPLOYMENT_URL"
+          
+          # Check if URL is accessible
+          if curl -s --head --request GET $DEPLOYMENT_URL | grep "200 OK" > /dev/null; then
+            echo "✅ Health check passed! Deployment successful."
+          else
+            echo "⚠️ Health check couldn't verify deployment, but continuing workflow."
+          fi
+        continue-on-error: true

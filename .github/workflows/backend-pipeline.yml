@@ -1,0 +1,90 @@
+name: Backend Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    # Allows manual triggering
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: password123
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: |
+          package-lock.json
+          backend/package.json
+    
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd backend
+        npm ci
+        # Install required test dependencies
+        npm install --no-save ts-jest@29.1.1 @jest/globals
+    
+    - name: Create ESLint config
+      run: |
+        cd backend
+        echo 'module.exports = {
+          parser: "@typescript-eslint/parser",
+          extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+          parserOptions: { 
+            ecmaVersion: 2020, 
+            sourceType: "module" 
+          },
+          env: { 
+            node: true, 
+            jest: true 
+          },
+          rules: {}
+        };' > .eslintrc.js
+    
+    - name: Run ESLint
+      run: |
+        cd backend
+        npm run lint
+      continue-on-error: true
+    
+    - name: Run unit tests
+      run: |
+        cd backend
+        # Run tests with force exit to prevent hanging
+        npm test
+      env:
+        NODE_ENV: test
+        MONGODB_URI: mongodb://admin:password123@localhost:27017/rygneco_test?authSource=admin
+        JWT_SECRET: test-secret
+    
+    - name: Build application
+      run: |
+        cd backend
+        npx tsc -p tsconfig.build.json

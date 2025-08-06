@@ -1,0 +1,231 @@
+/* HowItWorksPage.css - Basic styles for How It Works page layout and responsiveness */
+
+.howitworks-page {
+  font-family: 'Inter', Arial, sans-serif;
+  background: #f5f7fa;
+  color: #222;
+}
+
+.howitworks-hero img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+}
+
+.howitworks-process h2,
+.howitworks-items h2,
+.howitworks-sorting h2,
+.howitworks-reports h2,
+.howitworks-faq h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.howitworks-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.howitworks-step {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(67, 160, 71, 0.07);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 220px;
+}
+
+.howitworks-contact {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.howitworks-searchbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.howitworks-searchbar input {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  border: 1px solid #bdbdbd;
+  font-size: 1rem;
+  width: 220px;
+}
+
+.howitworks-search-result {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #388e3c;
+}
+
+.howitworks-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.howitworks-category {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.07);
+  min-width: 220px;
+  flex: 1 1 250px;
+  margin-bottom: 1rem;
+}
+
+.howitworks-category-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.howitworks-category-panel ul {
+  list-style: none;
+  padding: 0 1.5rem 1rem 1.5rem;
+}
+
+.howitworks-category-panel li {
+  margin-bottom: 0.5rem;
+}
+
+.howitworks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.howitworks-table th,
+.howitworks-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.howitworks-table th {
+  background: #e3f2fd;
+  font-weight: 600;
+}
+
+.howitworks-reports-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.howitworks-report-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.07);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 220px;
+}
+
+.howitworks-faq-list {
+  margin-top: 2rem;
+}
+
+.howitworks-faq-item {
+  margin-bottom: 1rem;
+}
+
+.howitworks-faq-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.howitworks-faq-panel {
+  background: #f1f8e9;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding: 2rem 1rem;
+  background: #e0f7fa;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.footer-info {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.footer-tagline {
+  display: block;
+  margin-top: 0.5rem;
+  color: #388e3c;
+}
+
+@media (max-width: 900px) {
+  .howitworks-steps,
+  .howitworks-reports-list,
+  .howitworks-categories {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .howitworks-hero img {
+    max-height: 180px;
+  }
+  .howitworks-step,
+  .howitworks-report-card,
+  .howitworks-category {
+    padding: 1rem;
+    min-width: 160px;
+  }
+  .howitworks-table th,
+  .howitworks-table td {
+    padding: 0.5rem;
+  }
+}

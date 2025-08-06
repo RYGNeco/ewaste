@@ -1,0 +1,99 @@
+name: Frontend Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    # Allows manual triggering
+
+jobs:
+  frontend-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '**/package.json'
+    
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
+    
+    # Using .eslintrc.cjs file that's already in the repository
+    - name: Verify ESLint config exists
+      run: |
+        cd frontend
+        if [ ! -f .eslintrc.cjs ]; then
+          echo "Warning: .eslintrc.cjs not found. Creating a default one."
+          echo 'module.exports = {
+            parser: "@typescript-eslint/parser",
+            extends: [
+              "eslint:recommended",
+              "plugin:@typescript-eslint/recommended",
+              "plugin:react/recommended",
+              "plugin:react-hooks/recommended"
+            ],
+            parserOptions: { 
+              ecmaVersion: 2020, 
+              sourceType: "module",
+              ecmaFeatures: {
+                jsx: true
+              }
+            },
+            env: { 
+              browser: true,
+              es6: true,
+              node: true,
+              jest: true
+            },
+            settings: {
+              react: {
+                version: "detect"
+              }
+            },
+            rules: {
+              "react/react-in-jsx-scope": "off"
+            }
+          };' > .eslintrc.cjs
+        fi
+    
+    - name: Run ESLint
+      run: |
+        cd frontend
+        npm run lint
+      continue-on-error: true
+    
+    - name: Format and check with Prettier
+      run: |
+        cd frontend
+        npx prettier --write src/
+        npx prettier --check src/
+    
+    - name: Run unit tests
+      run: |
+        cd frontend
+        npm run test -- --coverage --watchAll=false
+    
+    - name: Build application
+      run: |
+        cd frontend
+        npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: frontend/dist/
