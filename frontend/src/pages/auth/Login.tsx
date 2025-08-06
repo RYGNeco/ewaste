@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle, FaEye, FaEyeSlash, FaUser, FaBuilding, FaEnvelope, FaLock, FaArrowRight, FaRecycle } from 'react-icons/fa';
-<<<<<<< HEAD
 import { getAuth, signInWithPopup, GoogleAuthProvider, User, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import app from '../../firebase'; // adjust path as needed
@@ -45,14 +44,6 @@ const Login: React.FC = () => {
   
   const isLoginTab = (tab: string): tab is 'login' => tab === 'login';
   const isSignupTab = (tab: string): tab is 'signup' => tab === 'signup';
-=======
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-
-const Login: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const [loginType, setLoginType] = useState<'employee' | 'partner'>('employee');
   const [registerType, setRegisterType] = useState<'employee' | 'partner'>('employee');
   const [showPassword, setShowPassword] = useState(false);
@@ -107,7 +98,6 @@ const Login: React.FC = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
@@ -246,14 +236,11 @@ const Login: React.FC = () => {
 
   };
 
-=======
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-<<<<<<< HEAD
       const response = await api.post('/auth/login', {
         email: formData.email,
         password: formData.password,
@@ -289,27 +276,6 @@ const Login: React.FC = () => {
     } catch (error: any) {
       console.error('Login error:', error);
       alert(error.response?.data?.message || 'Login failed. Please try again.');
-=======
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store user type and data
-      localStorage.setItem('userType', loginType);
-      localStorage.setItem('userData', JSON.stringify({
-        email: formData.email,
-        status: 'active',
-        role: loginType === 'employee' ? 'admin' : 'partner'
-      }));
-
-      // Redirect based on user type
-      if (loginType === 'employee') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     } finally {
       setIsLoading(false);
     }
@@ -319,7 +285,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-<<<<<<< HEAD
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match');
@@ -383,87 +348,10 @@ const Login: React.FC = () => {
       console.error('Signup error:', error);
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
       alert(errorMessage);
-=======
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store user type and data
-      localStorage.setItem('userType', registerType);
-      localStorage.setItem('userData', JSON.stringify({
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        companyName: formData.companyName,
-        status: registerType === 'employee' ? 'pending' : 'active',
-        role: registerType === 'employee' ? formData.selectedRole.toLowerCase().replace(' ', '_') : 'partner'
-      }));
-
-      // Redirect based on user type
-      if (registerType === 'employee') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    } catch (error) {
-      console.error('Signup error:', error);
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     } finally {
       setIsLoading(false);
     }
   };
-
-<<<<<<< HEAD
-
-=======
-  const handleGoogleSignIn = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      
-      // Store user type and data
-      localStorage.setItem('userType', loginType);
-      localStorage.setItem('userData', JSON.stringify({
-        email: result.user.email,
-        status: 'active',
-        role: loginType === 'employee' ? 'admin' : 'partner'
-      }));
-
-      // Redirect based on user type
-      if (loginType === 'employee') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    } catch (error) {
-      console.error('Google sign-in error:', error);
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      
-      // Store user type and data
-      localStorage.setItem('userType', registerType);
-      localStorage.setItem('userData', JSON.stringify({
-        email: result.user.email,
-        status: registerType === 'employee' ? 'pending' : 'active',
-        role: registerType === 'employee' ? formData.selectedRole.toLowerCase().replace(' ', '_') : 'partner'
-      }));
-
-      // Redirect based on user type
-      if (registerType === 'employee') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    } catch (error) {
-      console.error('Google sign-up error:', error);
-    }
-  };
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
   const getPasswordStrengthColor = () => {
     if (passwordStrength <= 2) return 'bg-red-500';
@@ -474,20 +362,12 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-<<<<<<< HEAD
       <Navbar />
-=======
-      
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
       
       <div className="pt-16 pb-16">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-6xl mx-auto">
-<<<<<<< HEAD
             {/* Header */}
-=======
-            {/* Header
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 Welcome to RYGNeco
@@ -495,11 +375,7 @@ const Login: React.FC = () => {
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Join us in building a sustainable future through responsible e-waste management
               </p>
-<<<<<<< HEAD
             </div>
-=======
-            </div> */}
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
             {/* Tab Navigation */}
             <div className="flex justify-center mb-8">
@@ -535,11 +411,7 @@ const Login: React.FC = () => {
                   /* Login Form */
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">Welcome Back</h2>
-<<<<<<< HEAD
 
-=======
-                    
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                     {/* User Type Selection */}
                     <div className="mb-6">
                       <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -633,7 +505,6 @@ const Login: React.FC = () => {
                       </button>
                     </form>
 
-<<<<<<< HEAD
                     <div className="relative my-6">
                       <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300"></div>
@@ -652,26 +523,6 @@ const Login: React.FC = () => {
                       <FaGoogle className="text-red-500 mr-2" />
                       Sign in with Google
                     </button>
-=======
-                    {/* Google Sign In */}
-                    <div className="mt-6">
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                          <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleGoogleSignIn}
-                        className="w-full mt-4 flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <FaGoogle className="text-red-500" />
-                        <span className="font-medium text-gray-700">Google</span>
-                      </button>
-                    </div>
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                   </div>
                 ) : (
                   /* Signup Form */
@@ -881,7 +732,6 @@ const Login: React.FC = () => {
                       </button>
                     </form>
 
-<<<<<<< HEAD
                     <div className="relative my-6">
                       <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300"></div>
@@ -900,26 +750,6 @@ const Login: React.FC = () => {
                       <FaGoogle className="text-red-500 mr-2" />
                       Sign up with Google
                     </button>
-=======
-                    {/* Google Sign Up */}
-                    <div className="mt-6">
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                          <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={handleGoogleSignUp}
-                        className="w-full mt-4 flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <FaGoogle className="text-red-500" />
-                        <span className="font-medium text-gray-700">Google</span>
-                      </button>
-                    </div>
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
                   </div>
                 )}
               </div>
@@ -1021,13 +851,9 @@ const Login: React.FC = () => {
         </div>
       </div>
       
-<<<<<<< HEAD
       <Footer />
-=======
-  
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     </div>
   );
 };
 
-export default Login; 
+export default Login;
