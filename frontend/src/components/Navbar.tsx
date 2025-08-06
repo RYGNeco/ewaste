@@ -11,7 +11,7 @@ import {
   FaBuilding,
   FaUserTie
 } from 'react-icons/fa';
-import '../firebase';
+import '../firebase-config';
 import JoinUsDropdown from './navbar/JoinUsDropdown';
 import ServicesDropdown from './navbar/ServicesDropdown';
 import AboutDropdown from './navbar/AboutDropdown';

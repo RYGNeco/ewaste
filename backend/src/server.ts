@@ -1,10 +1,7 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import app from './app';
-<<<<<<< HEAD
 import { EmailService } from './services/emailService';
-=======
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -45,12 +42,9 @@ const startServer = async () => {
   try {
     await connectDB();
     
-<<<<<<< HEAD
     // Initialize email service
     EmailService.initialize();
     
-=======
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
     // Start the HTTP server even if DB connection fails in production
     const server = app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);

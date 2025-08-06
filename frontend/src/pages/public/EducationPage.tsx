@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
-import EcoNavbar from '../../components/EcoNavbar';
-=======
-import EcoNavbar from '../../components/Navbar'; // Corrected the import path
->>>>>>> c1d976faeace438720baff3c129c4dea43581e86
+
+import Navbar from '../../components/Navbar'; // Fixed import
 import {
   FaMobileAlt, FaExclamationTriangle, FaRecycle, FaArrowRight, FaArrowLeft, FaArrowUp, FaArrowDown, FaInfoCircle, FaGlobe, FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn
 } from 'react-icons/fa';
@@ -54,7 +51,7 @@ const EducationPage = () => {
 
   return (
     <div className="education-page eco-bg">
-      <EcoNavbar />
+      <Navbar />
       {/* Hero Section */}
       <section className="education-hero">
         {/* Removed hero image for cleaner look */}

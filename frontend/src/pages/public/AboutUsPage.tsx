@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaBoxOpen, FaWrench, FaChartBar, FaBrain, FaTruck, FaRecycle, FaCheckCircle, FaSeedling, FaHandshake, FaLightbulb, FaShieldAlt, FaBalanceScale } from "react-icons/fa";
