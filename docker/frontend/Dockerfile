@@ -49,7 +49,7 @@ RUN find src -type f \( -name "*.ts" -o -name "*.tsx" \) ! -name "*.d.ts" -exec 
 RUN npm run build
 
 # Production stage with nginx
-FROM nginx:alpine AS production
+FROM nginx:1.29.5-alpine3.23 AS production
 
 # Copy built application
 COPY --from=builder /app/dist /usr/share/nginx/html
